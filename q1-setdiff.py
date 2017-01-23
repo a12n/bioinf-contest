@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from itertools import filterfalse
+from random import shuffle
 from sys import stdin
 
 def parsechems(s, sep=None):
@@ -11,6 +12,7 @@ def parsereaction(s):
 
 chems = parsechems(stdin.readline().strip())
 reactions = [parsereaction(line) for line in stdin]
+shuffle(reactions)
 
 def updatereaction(reaction):
     reaction[0].difference_update(chems)
