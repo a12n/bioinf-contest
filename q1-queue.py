@@ -11,19 +11,19 @@ def parsereaction(s):
 
 chems = parsechems(stdin.readline().strip())
 reactions = [parsereaction(line) for line in stdin]
-state = list(chems)
 
-def reactiondone(reaction):
-    done = not reaction[0]
-    if done:
-        state.extend(reaction[1].difference(chems))
+def updatereaction(reaction):
+    reaction[0].difference_update(chems)
+    if not reaction[0]:
         chems.update(reaction[1])
-    return done
+        return True
+    else:
+        return False
 
-while state:
-    chem = state.pop(0)
-    for subs, prods in reactions:
-        subs.discard(chem)
-    reactions[:] = filterfalse(reactiondone, reactions)
+while True:
+    nchems = len(chems)
+    reactions[:] = filterfalse(updatereaction, reactions)
+    if len(chems) == nchems:
+        break
 
 print(' '.join(map(str, chems)))
