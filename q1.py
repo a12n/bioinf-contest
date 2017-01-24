@@ -9,7 +9,7 @@ def parsereaction(s):
     return tuple(map(lambda t: parsechems(t, '+'), s.split('->')))
 
 chems = parsechems(stdin.readline().strip())
-reactions = {}
+reactions = dict()
 for line in stdin:
     subs, prods = parsereaction(line)
     node = reactions
