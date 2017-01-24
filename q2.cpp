@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cctype>
 #include <iostream>
 #include <iterator>
 #include <string>
@@ -72,6 +73,7 @@ main()
     string s;
 
     getline(cin, s);
+    for (auto &c : s) c = toupper(c);
     cerr << "s = " << s << endl
          << "n = " << s.size() << endl;
 
