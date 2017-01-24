@@ -48,7 +48,7 @@ bool
 is_perfect(Iterator first, Iterator last)
 {
     const auto n = last - first;
-    if (n == 0) {
+    if (first > last || n == 0) {
         return true;
     }
     if (! maybe_perfect(first, last)) {
