@@ -7,7 +7,6 @@
 using std::cerr;
 using std::cin;
 using std::copy;
-using std::count;
 using std::cout;
 using std::endl;
 using std::getline;
@@ -27,13 +26,25 @@ comp(char c)
 }
 
 template <typename Iterator>
+void
+count(Iterator first, Iterator last,
+      size_t& a, size_t& c, size_t& g, size_t& u)
+{
+    a = c = g = u = 0;
+    for (; first != last; ++first) {
+        a += (*first == 'A');
+        c += (*first == 'C');
+        g += (*first == 'G');
+        u += (*first == 'U');
+    }
+}
+
+template <typename Iterator>
 bool
 maybe_perfect(Iterator first, Iterator last)
 {
-    const auto a = count(first, last, 'A');
-    const auto c = count(first, last, 'C');
-    const auto g = count(first, last, 'G');
-    const auto u = count(first, last, 'U');
+    size_t a, c, g, u;
+    count(first, last, a, c, g, u);
     // copy(first, last, ostream_iterator<char>(cerr));
     // cerr << " " << a
     //      << " " << c
@@ -86,10 +97,8 @@ main()
         return 0;
     }
 
-    const auto a = count(s.begin(), s.end(), 'A');
-    const auto c = count(s.begin(), s.end(), 'C');
-    const auto g = count(s.begin(), s.end(), 'G');
-    const auto u = count(s.begin(), s.end(), 'U');
+    size_t a, c, g, u;
+    count(s.begin(), s.end(), a, c, g, u);
     cerr << "a = " << a << ", "
          << "c = " << c << ", "
          << "g = " << g << ", "
