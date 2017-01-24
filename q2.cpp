@@ -3,6 +3,7 @@
 #include <iostream>
 #include <iterator>
 #include <string>
+#include <unordered_map>
 
 using std::cerr;
 using std::cin;
@@ -12,6 +13,7 @@ using std::endl;
 using std::getline;
 using std::ostream_iterator;
 using std::string;
+using std::unordered_map;
 
 char
 comp(char c)
@@ -98,6 +100,42 @@ is_perfect(const string& s, size_t begin, size_t end)
             }
         }
     }
+    return false;
+}
+
+unordered_map<string, bool> cache;
+
+bool
+is_perfect2(const string& s, size_t begin, size_t end)
+{
+    const auto n = end - begin;
+
+    if (begin > end || n == 0) {
+        return true;
+    }
+
+    const auto t = s.substr(begin, n);
+    const auto it = cache.find(t);
+    if (it != cache.end()) {
+        return it->second;
+    }
+
+    if (! maybe_perfect(s.begin() + begin, s.begin() + end)) {
+        cache.insert(decltype(cache)::value_type(t, false));
+        return false;
+    }
+
+    const auto c = comp(s[begin]);
+    for (auto i = begin + 1; i < end; i += 2) {
+        // cerr << "i = " << i << endl;
+        if (s[i] == c) {
+            if (is_perfect2(s, begin + 1, i) && is_perfect2(s, i + 1, end)) {
+                cache.insert(decltype(cache)::value_type(t, true));
+                return true;
+            }
+        }
+    }
+    cache.insert(decltype(cache)::value_type(t, false));
     return false;
 }
 
