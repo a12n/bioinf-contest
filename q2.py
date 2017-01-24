@@ -20,13 +20,26 @@ def cat(n):
 
 comp = {'A': 'U', 'C': 'G', 'G': 'C', 'U': 'A'}
 
+def findall(s, sub, start=0):
+    while True:
+        start = s.find(sub, start)
+        if start != -1:
+            yield start
+            start += len(sub)
+        else:
+            break
+
 def maybeperfect(s, start, end):
-    # n = {nt: s.count(nt, start, end) for nt in 'ACGU'}
-    # debug('maybeperfect: %s %s', s[start:end], n)
-    # return n['A'] == n['U'] and n['C'] == n['G']
-    return True
+    a = s.count('A', start, end)
+    c = s.count('C', start, end)
+    g = s.count('G', start, end)
+    u = s.count('U', start, end)
+    debug('maybeperfect: "%s" %d %d %d %d', s[start:end], a, c, g, u)
+    return a == u and c == g
 
 s = stdin.readline().strip().upper()
+# t = {nt: list(findall(s, nt)) for nt in 'ACGU'}
+# debug('t = %s', t)
 
 # def isperfect(s, start, end):
 #     debug('s = %s', s[start:end])
@@ -47,44 +60,51 @@ s = stdin.readline().strip().upper()
 #     return False
 
 bonds = dict()
+singles = set()
 
 def isperfect(s, start, end, level=0):
     n = end - start
-    debug('%ss = "%s", n = %s', ' ' * level, s[start:end], n)
-    if n < 2:
+    debug('%ss = "%s", start = %d, end = %d, n = %s',
+          ' ' * level, s[start:end], start, end, n)
+    if n == 0:
+        return True
+    if n == 1:
+        singles.add(start)
         return True
     if n == 2:
         if s[start] == comp[s[start + 1]]:
             bonds[start] = start + 1
+            debug('bond (%d, %d)', start, start + 1)
             return True
         else:
             return False
+    if not maybeperfect(s, start, end):
+        return False
     for i in range(start + 1, end): # +2
-        debug('%si = %s', ' ' * level, i)
         if s[i] == comp[s[start]]:
             if isperfect(s, start + 1, i, level + 1) and isperfect(s, i + 1, end, level + 1):
                 bonds[start] = i
+                debug('bond (%d, %d)', start, i)
                 return True
     return False
 
-if isperfect(s, 0, len(s)):
+ok = isperfect(s, 0, len(s))
+debug('bonds = %s', bonds)
+debug('singles = %s', singles)
+if ok:
     if len(s) % 2 == 0:
-        print('perfect')
+        if len(singles) == 0:
+            print('perfect')
+        else:
+            print('imperfect')
     else:
-        print('almost perfect')
+        if len(singles) > 0:
+            print('almost perfect')
+        else:
+            print('imperfect')
 else:
     print('imperfect')
-debug('bonds = %s', bonds)
 
-# def findall(s, sub, start=0):
-#     while True:
-#         start = s.find(sub, start)
-#         if start != -1:
-#             yield start
-#             start += len(sub)
-#         else:
-#             break
-#
 # s = stdin.readline().strip()
 # debug(s)
 #
