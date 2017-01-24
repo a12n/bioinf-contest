@@ -150,7 +150,7 @@ main()
          << "n = " << s.size() << endl;
 
     if (s.size() % 2 == 0) {
-        if (is_perfect(s, 0, s.size())) {
+        if (is_perfect2(s, 0, s.size())) {
             cout << "perfect" << endl;
         } else {
             cout << "imperfect" << endl;
@@ -192,7 +192,7 @@ main()
         // XXX
         string t = s;
         t.erase(q, 1);
-        if (is_perfect(t, 0, t.size())) {
+        if (is_perfect2(t, 0, t.size())) {
             cout << "almost perfect" << endl;
             return 0;
         }
