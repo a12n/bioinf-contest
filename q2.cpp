@@ -79,6 +79,28 @@ is_perfect(Iterator first, Iterator last)
     return false;
 }
 
+bool
+is_perfect(const string& s, size_t begin, size_t end)
+{
+    const auto n = end - begin;
+    if (begin > end || n == 0) {
+        return true;
+    }
+    if (! maybe_perfect(s.begin() + begin, s.begin() + end)) {
+        return false;
+    }
+    const auto c = comp(s[begin]);
+    for (auto i = begin + 1; i < end; i += 2) {
+        // cerr << "i = " << i << endl;
+        if (s[i] == c) {
+            if (is_perfect(s, begin + 1, i) && is_perfect(s, i + 1, end)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 int
 main()
 {
