@@ -65,9 +65,10 @@ is_perfect(Iterator first, Iterator last)
     if (! maybe_perfect(first, last)) {
         return false;
     }
+    const auto c = comp(*first);
     for (auto i = 1; i < n; i += 2) {
         // cerr << "i = " << i << endl;
-        if (*(first + i) == comp(*first)) {
+        if (*(first + i) == c) {
             if (is_perfect(first + 1, first + i) &&
                 is_perfect(first + i + 1, last))
             {
