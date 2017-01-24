@@ -72,8 +72,8 @@ main()
     string s;
 
     getline(cin, s);
-    // cerr << "s = " << s << endl
-    //      << "n = " << s.size() << endl;
+    cerr << "s = " << s << endl
+         << "n = " << s.size() << endl;
 
     if (s.size() % 2 == 0) {
         if (is_perfect(s.begin(), s.end())) {
@@ -88,10 +88,10 @@ main()
     const auto c = count(s.begin(), s.end(), 'C');
     const auto g = count(s.begin(), s.end(), 'G');
     const auto u = count(s.begin(), s.end(), 'U');
-    // cerr << "a = " << a << ", "
-    //      << "c = " << c << ", "
-    //      << "g = " << g << ", "
-    //      << "u = " << u << endl;
+    cerr << "a = " << a << ", "
+         << "c = " << c << ", "
+         << "g = " << g << ", "
+         << "u = " << u << endl;
 
     char try_remove = '\0';
     if (a == u) {
@@ -108,7 +108,7 @@ main()
         }
     }
 
-    // cerr << "try_remove = " << try_remove << endl;
+    cerr << "try_remove = " << try_remove << endl;
 
     if (try_remove == '\0') {
         cout << "imperfect" << endl;
@@ -116,7 +116,7 @@ main()
     }
 
     for (size_t p = 0, q = 0; (q = s.find(try_remove, p)) != s.npos; p = q + 1) {
-        // cerr << "q = " << q << endl;
+        cerr << "q = " << q << endl;
         // XXX
         string t = s;
         t.erase(q, 1);
