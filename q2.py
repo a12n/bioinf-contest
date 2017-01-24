@@ -41,19 +41,24 @@ cache = dict()
 
 def isperfect2(s, start, end, skip=NO_SKIP):
     hasskip = (skip >= start and skip < end)
-    n = end - start - int(hasskip)
-    if n == 0:
-        return True
-    if not maybeperfect(s, start, end, skip):
-        return False
-    for i in range(start + 1, end):
-        if i == skip:
-            continue
-        if s[i] == comp[s[start]]:
-            if isperfect2(s, start + 1, i, skip) and isperfect2(s, i + 1, end, skip):
-                debug('bond (%d, %d)', start, i)
-                return True
-    return False
+    index = (start, end, (skip if hasskip else -1))
+    if not index in cache:
+        n = end - start - int(hasskip)
+        if n == 0:
+            cache[index] = True
+        elif not maybeperfect(s, start, end, skip):
+            cache[index] = False
+        else:
+            cache[index] = False
+            for i in range(start + 1, end):
+                if i == skip:
+                    continue
+                if s[i] == comp[s[start]]:
+                    if isperfect2(s, start + 1, i, skip) and isperfect2(s, i + 1, end, skip):
+                        debug('bond (%d, %d)', start, i)
+                        cache[index] = True
+                        break
+    return cache[index]
 
 tryremove = None
 
@@ -102,3 +107,4 @@ if tryremove:
 
 # TODO: bytearray
 # TODO: isperfect2 cache
+debug('cache = %s', cache)
