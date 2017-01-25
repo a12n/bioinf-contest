@@ -15,7 +15,7 @@ def parsereaction(s):
 chems = parsechems(stdin.readline().strip())
 reactions = dict()
 for line in stdin:
-    subs, prods = parsereaction(line)
+    subs, prods = parsereaction(line.strip())
     node = reactions
     for chem in subs:
         node = node.setdefault(chem, dict())
