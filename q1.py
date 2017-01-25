@@ -13,26 +13,26 @@ def parsereaction(s):
     return tuple(map(lambda t: parsechems(t, '+'), s.split('->')))
 
 chems = parsechems(stdin.readline().strip())
-reactions = dict()
+reactions = []
+requires = dict()
 for line in stdin:
     subs, prods = parsereaction(line.strip())
-    node = reactions
-    for chem in subs:
-        node = node.setdefault(chem, dict())
-    node.setdefault(None, set()).update(prods)
-debug('reactions = %s', reactions)
+    i = len(reactions)
+    reactions.append((subs, prods))
+    for sub in subs:
+        requires.setdefault(sub, set()).add(i)
 
-def react(chems, node):
-    for sub, prodsornode in node.items():
-        if sub == None:
-            chems.update(prodsornode)
-        elif sub in chems:
-            react(chems, prodsornode)
+newchems = chems.copy()
+while newchems:
+    chem = newchems.pop()
+    if not chem in requires:
+        continue
+    for i in list(requires[chem]):
+        reaction = reactions[i]
+        reaction[0].discard(chem)
+        if not reaction[0]:
+            chems.update(reaction[1])
+            newchems.update(reaction[1])
+            requires[chem].discard(i)
 
-while True:
-    nchems = len(chems)
-    react(chems, reactions)
-    if len(chems) == nchems:
-        break
-
-print(' '.join(map(str, chems)))
+print(' '.join(map(str, sorted(chems))))
