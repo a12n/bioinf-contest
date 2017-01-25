@@ -19,6 +19,10 @@ for IN_FILE in $PROG_ID/*.in
 do
     TEST_ID=${IN_FILE%.*}
     OUT_FILE=$TEST_ID.out
+    if [ ! -f $OUT_FILE ]
+    then
+        continue
+    fi
     PROG_OUT=$($PROG < $IN_FILE)
     EXPECT_OUT=$(cat $OUT_FILE)
     echo ==== $TEST_ID ====
