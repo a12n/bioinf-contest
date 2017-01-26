@@ -79,7 +79,7 @@ def combine(s, t, l=None):
     assert l >= 0 and l <= n
     return left(s, n - l) + t
 
-def longestoverlap(seqs, skip=set()):
+def longestoverlap(seqs):
     # debug('longestoverlap seqs %s', seqs)
     debug('longestoverlap %d seqs', len(seqs))
     global s
@@ -87,7 +87,9 @@ def longestoverlap(seqs, skip=set()):
     for i in range(len(seqs)):
         debug('i %s, ans %s', i, ans[0:3])
         for j in range(len(seqs)):
-            if i == j or i in skip or j in skip:
+            if i == j:
+                continue
+            if ans[2] >= min(len(seqs[i]), len(seqs[j])):
                 continue
             l = overlap(seqs[i], seqs[j])
             if l > ans[2]:
