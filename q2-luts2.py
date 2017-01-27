@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import logging
-from enum import Enum
 from logging import debug
 from sys import stdin
 
