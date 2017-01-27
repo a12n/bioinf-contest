@@ -141,9 +141,9 @@ class RNA:
         for i in self.positions(nt, start, end):
             debug('_perfect3: i %d', i)
             nleft = i - start
-            nright = end - i
+            nright = end - (i + 1)
             if nleft % 2 == 0 and nright % 2 == 0:
-                if self._perfect2(start, i) and self._perfect2(i, end):
+                if self._perfect2(start, i) and self._perfect2(i + 1, end):
                     debug('_perfect3: True')
                     return (True, i)
         debug('_perfect3: False')
