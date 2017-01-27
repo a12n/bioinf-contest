@@ -24,11 +24,11 @@ while newchems:
     if not chem in requires:
         continue
     for i in list(requires[chem]):
-        reaction = reactions[i]
-        reaction[0].discard(chem)
-        if not reaction[0]:
-            chems.update(reaction[1])
-            newchems.update(reaction[1])
+        subs, prods = reactions[i]
+        subs.discard(chem)
+        if not subs:
+            chems.update(prods)
+            newchems.update(prods)
             requires[chem].discard(i)
 
 print(' '.join(map(str, sorted(chems))))
