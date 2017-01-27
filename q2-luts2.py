@@ -143,6 +143,7 @@ class RNA:
             nleft = i - start
             nright = end - (i + 1)
             if nleft % 2 == 0 and nright % 2 == 0:
+                # XXX: parts may be unbalaned by their own, but balanced together
                 if self._perfect2(start, i) and self._perfect2(i + 1, end):
                     debug('_perfect3: True')
                     return (True, i)
