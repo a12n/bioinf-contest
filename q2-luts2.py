@@ -32,6 +32,7 @@ class RNA:
 
     def __init__(self, s):
         self._s = s.upper()
+        self._x = bytearray(' ' * len(self._s), 'ascii')
         debug('_s %s', self._s)
         self._count = {c: RNA._makecount(self._s, c) for c in 'ACGU'}
         self._pos = {c: RNA._makepos(self._s, c) for c in 'ACGU'}
@@ -125,8 +126,10 @@ class RNA:
             nright = end - (i + 1)
             if nleft % 2 == 0 and nright % 2 == 0:
                 if self._perfect2(start + 1, i) and self._perfect2(i + 1, end):
-                    debug('_perfect2: bond %d %d', start, i)
-                    debug('_perfect2: True')
+                    self._x[start] = ord(b'(')
+                    self._x[i] = ord(b')')
+                    debug('_perfect2: bond %d %d "%s"', start, i, self._s)
+                    debug('_perfect2: bond %d %d "%s"', start, i, self._x.decode())
                     return True
         debug('_perfect2: False')
         return False
