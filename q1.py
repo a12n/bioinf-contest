@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 
-import logging
-from logging import debug
 from sys import stdin
-
-logging.basicConfig(format='%(message)s', level=logging.DEBUG)
 
 def parsechems(s, sep=None):
     return set(map(int, s.split(sep)))
