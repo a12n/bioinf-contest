@@ -6,105 +6,31 @@ from sys import stdin
 
 logging.basicConfig(format='%(message)s', level=logging.DEBUG)
 
+s = stdin.readline().strip().upper()
+# debug(s)
 
 comp = {'A': 'U', 'C': 'G', 'G': 'C', 'U': 'A'}
 
-def findall(s, sub, start=0):
-    while True:
-        start = s.find(sub, start)
-        if start != -1:
-            yield start
-            start += len(sub)
+def matchbonds(s):
+    stack = []
+    for c in s:
+        if stack and stack[-1] == comp[c]:
+            stack.pop()
         else:
-            break
+            stack.append(c)
+    return stack
 
-s = stdin.readline().strip().upper()
-debug('s = "%s"', s)
-
-NO_SKIP = 0xFFFFFF
-
-def counts(s, start, end, skip=NO_SKIP):
-    hasskip = (skip >= start and skip < end)
-    return (
-        s.count('A', start, end) - int(hasskip and s[skip] == 'A'),
-        s.count('C', start, end) - int(hasskip and s[skip] == 'C'),
-        s.count('G', start, end) - int(hasskip and s[skip] == 'G'),
-        s.count('U', start, end) - int(hasskip and s[skip] == 'U')
-    )
-
-def maybeperfect(s, start, end, skip=NO_SKIP):
-    a, c, g, u = counts(s, start, end, skip)
-    debug('maybeperfect: "%s" %s %d %d %d %d', s[start:end], skip, a, c, g, u)
-    return a == u and c == g
-
-cache = dict()
-
-def isperfect2(s, start, end, skip=NO_SKIP):
-    hasskip = (skip >= start and skip < end)
-    index = (start, end, (skip if hasskip else -1))
-    if not index in cache:
-        n = end - start - int(hasskip)
-        if n == 0:
-            cache[index] = True
-        elif not maybeperfect(s, start, end, skip):
-            cache[index] = False
-        else:
-            cache[index] = False
-            for i in range(start + 1, end):
-                if i == skip:
-                    continue
-                if s[i] == comp[s[start]]:
-                    if isperfect2(s, start + 1, i, skip) and isperfect2(s, i + 1, end, skip):
-                        debug('bond (%d, %d)', start, i)
-                        cache[index] = True
-                        break
-    return cache[index]
-
-tryremove = None
-
-if len(s) % 2 == 0:
-    if isperfect2(s, 0, len(s)):
-        print('perfect')
-    else:
-        print('imperfect')
-else:
-    a, c, g, u = counts(s, 0, len(s))
-    debug('%d %d %d %d', a, c, g, u)
-    if a == u:
-        if c - g == 1:
-            # Try remove C
-            tryremove = 'C'
-        elif g - c == 1:
-            # Try remove G
-            tryremove = 'G'
-        else:
-            print('imperfect')
-    elif c == g:
-        if a - u == 1:
-            # Try remove A
-            tryremove = 'A'
-        elif u - a == 1:
-            # Try remove U
-            tryremove = 'U'
-        else:
-            print('imperfect')
-    else:
-        print('imperfect')
-
-
-if tryremove:
-    found = False
-    debug('tryremove %s', tryremove)
-    for pos in findall(s, tryremove):
-        debug('pos = %s', pos)
-        if isperfect2(s, 0, len(s), pos):
-            found = True
-            break
-    if found:
+s = matchbonds(s)
+# debug('stack %s', s)
+if not s:
+    print('perfect')
+elif len(s) % 2 == 1:
+    del(s[len(s) // 2])
+    s = matchbonds(s)
+    # debug('stack %s', s)
+    if not s:
         print('almost perfect')
     else:
         print('imperfect')
-
-# TODO: bytearray
-# TODO: isperfect2 cache
-debug('cache = %s', cache)
+else:
+    print('imperfect')
