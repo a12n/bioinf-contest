@@ -73,30 +73,28 @@ class DeBruijnGraph:
     def outdeg(self, v):
         return self._outdeg.get(v, 0)
 
+    def printdot(self):
+        print('digraph {')
+        for v, ws in self._outgoing.items():
+            for w, n in ws.items():
+                print(v, '->', w, '[label=' + v + w[-1] + ']', ';')
+                for _ in range(1, n):
+                    print(v, '->', w, ';')
+        print('}')
+
 g = DeBruijnGraph(reads, k)
 
-# debug('nodes:')
-# for v in g.nodes():
-#     debug('%d -> %s -> %d', g.indeg(v), v, g.outdeg(v))
-#
+debug('nodes:')
+for v in g.nodes():
+    debug('%d -> %s -> %d', g.indeg(v), v, g.outdeg(v))
+
+g.printdot()
+
 # debug('edges:')
 # for e in g.edges():
 #     debug('%s -> [%s] -> %s', e[0], e[0] + e[1][1:], e[1])
 
-# Compress graph
-
 # TODO
-
-def printdot(g):
-    print('digraph {')
-    for v, ws in g.items():
-        for w, n in ws.items():
-            print(v, '->', w, '[label=' + v + w[1:] + ']', ';')
-            for _ in range(1, n):
-                print(v, '->', w, ';')
-    print('}')
-
-# printdot(dbru)
 
 # for aag in list(outgoinf.keys()):
 #     if len(outgoing[aag]) == 1:
