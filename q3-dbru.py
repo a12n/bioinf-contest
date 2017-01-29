@@ -20,50 +20,83 @@ def right(s, k):
 
 s = stdin.readline().strip().upper()
 reads = tuple([stdin.readline().strip().upper() for i in range(int(stdin.readline()))])
-debug('Number of reads = %s', len(reads))
-debug('Min read len = %s', min(map(len, reads)))
-debug('Max read len = %s', max(map(len, reads)))
-debug('Avg read len = %s', float(sum(map(len, reads))) / len(reads))
-debug('reads %s', reads)
+debug('num reads %s', len(reads))
+debug('min read len %s', min(map(len, reads)))
+debug('max read len %s', max(map(len, reads)))
+debug('avg read len %s', float(sum(map(len, reads))) / len(reads))
+# debug('reads %s', reads)
 
 k = int(argv[1])
-debug('k = %s', k)
+debug('k %s', k)
 
 # Build graph
 
-incoming = dict()
-outgoing = dict()
-dbru = outgoing
-for read in reads:
-    for kmer in kmers(read, k):
-        l = left(kmer, k - 1)
-        r = right(kmer, k - 1)
-        froml = outgoing.setdefault(l, dict())
-        tor = incoming.setdefault(r, dict())
-        froml[r] = froml.setdefault(r, 0) + 1
-        tor[l] = tor.setdefault(l, 0) + 1
-debug('dbru %s', dbru)
+class DeBruijnGraph:
+    def __init__(self, reads, k):
+        self._incoming = dict()
+        self._outgoing = dict()
+        self._indeg = dict()
+        self._outdeg = dict()
+        debug('Building graph for %d reads, k %d', len(reads), k)
+        for read in reads:
+            for kmer in kmers(read, k):
+                l = left(kmer, k - 1)
+                r = right(kmer, k - 1)
+                froml = self._outgoing.setdefault(l, dict())
+                tor = self._incoming.setdefault(r, dict())
+                froml[r] = froml.setdefault(r, 0) + 1
+                tor[l] = tor.setdefault(l, 0) + 1
+                self._outdeg[l] = self._outdeg.setdefault(l, 0) + 1
+                self._indeg[r] = self._indeg.setdefault(r, 0) + 1
+        self._compress()
 
-def indeg(v):
-    return sum(incoming.get(v, dict()).values())
+    def _compress(self):
+        debug('Compressing graph, %d nodes', self.order())
+        # TODO
+        pass
 
-def outdeg(v):
-    return sum(outgoing.get(v, dict()).values())
+    def order(self):
+        return len(self._outgoing)
 
-for v in dbru.keys():
-    debug('%s in %d, out %d', v, indeg(v), outdeg(v))
+    def nodes(self):
+        return self._outgoing.keys()
+
+    def edges(self):
+        for v, ws in self._outgoing.items():
+            for w, n in ws.items():
+                for i in range(n):
+                    yield (v, w)
+
+    def indeg(self, v):
+        return self._indeg.get(v, 0)
+
+    def outdeg(self, v):
+        return self._outdeg.get(v, 0)
+
+g = DeBruijnGraph(reads, k)
+
+# debug('nodes:')
+# for v in g.nodes():
+#     debug('%d -> %s -> %d', g.indeg(v), v, g.outdeg(v))
+#
+# debug('edges:')
+# for e in g.edges():
+#     debug('%s -> [%s] -> %s', e[0], e[0] + e[1][1:], e[1])
 
 # Compress graph
 
 # TODO
 
-print('digraph {')
-for a, b in dbru.items():
-    for c, n in b.items():
-        print(a, '->', c, '[label=' + a + c[1:] + ']', ';')
-        for _ in range(1, n):
-            print(a, '->', c, ';')
-print('}')
+def printdot(g):
+    print('digraph {')
+    for v, ws in g.items():
+        for w, n in ws.items():
+            print(v, '->', w, '[label=' + v + w[1:] + ']', ';')
+            for _ in range(1, n):
+                print(v, '->', w, ';')
+    print('}')
+
+# printdot(dbru)
 
 # for aag in list(outgoinf.keys()):
 #     if len(outgoing[aag]) == 1:
