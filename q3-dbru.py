@@ -32,13 +32,18 @@ debug('max read len %s', max(map(len, reads)))
 debug('avg read len %s', float(sum(map(len, reads))) / len(reads))
 # debug('reads %s', reads)
 
-k = int(argv[1])
+k = int(argv[1]) if len(argv) > 1 else None
 debug('k %s', k)
 
 # Build graph
 
 class DeBruijnGraph:
-    def __init__(self, reads, k):
+    def __init__(self, reads, k=None):
+        if not k:
+            k = min(map(len, reads)) - 1
+            if k % 2 == 0:
+                k -= 1
+            k = max(k, 2)
         self._incoming = dict()
         self._outgoing = dict()
         self._indeg = dict()
