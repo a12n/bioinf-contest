@@ -18,6 +18,12 @@ def left(s, k):
 def right(s, k):
     return s[-k:]
 
+def printans(reads, t):
+    print(t)
+    for read in reads:
+        p = t.find(read)
+        print((p + 1) if p != -1 else -1)
+
 s = stdin.readline().strip().upper()
 reads = tuple([stdin.readline().strip().upper() for i in range(int(stdin.readline()))])
 debug('num reads %s', len(reads))
