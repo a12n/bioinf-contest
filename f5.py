@@ -36,6 +36,23 @@ logging.debug('%d proteins %s', len(proteins), proteins)
 
 catalyze = [set()] * len(reactions)
 
-# TODO
+def experiment():
+    try:
+        i = next((i for i in range(len(reactions)) if not catalyze[i]))
+    except StopIteration:
+        # All reactions have known catalyzers
+        return None
+    logging.debug('i %d, reactions[i] %s', i, reactions[i])
+    # TODO
+    return None
+
+while True:
+    try:
+        descrs = experiment()
+        if not descrs:
+            # No more experiments
+            break
+    except KeyboardInterrupt:
+        break
 
 printans(catalyze)
