@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <iterator>
 #include <memory>
@@ -17,6 +18,7 @@ using std::unique_ptr;
 using std::istringstream;
 using std::ostream;
 using std::pair;
+using std::random_shuffle;
 using std::string;
 using std::vector;
 
@@ -66,7 +68,9 @@ make_interval_list(const uint_list& ul)
 interval_list
 read_interval_list(istream& is)
 {
-    return make_interval_list(read_uint_list(is));
+    auto ans = make_interval_list(read_uint_list(is));
+    random_shuffle(ans.begin(), ans.end());
+    return ans;
 }
 
 void
