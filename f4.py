@@ -31,7 +31,12 @@ mean = gccontent(s)
 std = numpy.std(list(map(gccontent, subs)))
 print('mean', mean, 'std', std)
 
-plot.plot(list(map(gccontent, subs)))
+x = [k * i for i in range(len(subs))]
+plot.plot(x, list(map(gccontent, subs)), '-r', \
+          x, [mean - std] * len(x), '-g', \
+          x, [mean] * len(x), '-b', \
+          x, [mean + std] * len(x), '-g' \
+)
 plot.show()
 
 # def weirdgc(subs, mean, std, alpha=2.2):
