@@ -31,10 +31,11 @@ class DIS:
     def intersects(self, other):
         if len(other) > len(self):
             return other.intersects(self)
-        if intersects(self._endpoints(), other._endpoints()):
-            for iv in zip(other.first, other.last):
-                if self._intersects1(iv):
-                    return True
+        if not intersects(self._endpoints(), other._endpoints()):
+            return False
+        for iv in zip(other.first, other.last):
+            if self._intersects1(iv):
+                return True
         return False
 
 # --------------------------------------------------------------------------------------
