@@ -80,25 +80,32 @@ class IntervalSet:
                     return True
         return False
 
-n, m = map(int, stdin.readline().split())
-genes = [IntervalSet(list(map(int, stdin.readline().split()))) for _ in range(n)]
-reads = [IntervalSet(list(map(int, stdin.readline().split()))) for _ in range(m)]
+def intervals_of_list(l):
+    return [(l[2 * i], l[2 * i + 1]) for i in range(len(l) // 2)]
 
-ans = [0] * n
-intersects = [[False] * n for _ in range(m)]
+def intervals_of_str(s):
+    return intervals_of_list(list(map(int, s.split())))
 
-for j in range(len(reads)):
-    for i in range(len(genes)):
-        intersects[j][i] = genes[i].intersects(reads[j])
-# print(intersects)
+if __name__ == '__main__':
+    n, m = map(int, stdin.readline().split())
+    genes = [IntervalTree(intervals_of_str(stdin.readline())) for _ in range(n)]
+    reads = [intervals_of_str(stdin.readline()) for _ in range(m)]
 
-for j in range(len(reads)):
-    try:
-        i = intersects[j].index(True, 0)
+    ans = [0] * n
+    intersects = [[False] * n for _ in range(m)]
+
+    for j in range(len(reads)):
+        for i in range(len(genes)):
+            intersects[j][i] = genes[i].intersects_interval_list(reads[j])
+    # print(intersects)
+
+    for j in range(len(reads)):
         try:
-            intersects[j].index(True, i + 1)
+            i = intersects[j].index(True, 0)
+            try:
+                intersects[j].index(True, i + 1)
+            except ValueError:
+                ans[i] += 1
         except ValueError:
-            ans[i] += 1
-    except ValueError:
-        pass
-print('\n'.join(map(str, ans)))
+            pass
+    print('\n'.join(map(str, ans)))
