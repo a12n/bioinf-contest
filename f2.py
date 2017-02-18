@@ -36,6 +36,7 @@ def reconstruct():
     origkmers = set((stdin.readline().rstrip() for _ in range(n)))
     assert all(len(kmer) == k for kmer in origkmers)
     # TODO
+    print(0)
 
 if __name__ == '__main__':
     try:
