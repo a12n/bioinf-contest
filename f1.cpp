@@ -52,7 +52,7 @@ read_uint_list(istream& is)
 }
 
 interval_list
-interval_list_of_uint_list(const uint_list& ul)
+make_interval_list(const uint_list& ul)
 {
     interval_list ans(ul.size() / 2);
     for (size_t i = 0; i < ans.size(); ++i) {
@@ -64,7 +64,7 @@ interval_list_of_uint_list(const uint_list& ul)
 interval_list
 read_interval_list(istream& is)
 {
-    return interval_list_of_uint_list(read_uint_list(is));
+    return make_interval_list(read_uint_list(is));
 }
 
 void
