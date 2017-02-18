@@ -17,6 +17,9 @@ def printreq(descrs):
         print(' '.join(c))
         print(' '.join(p))
 
+def readresp(n):
+    return [parsechems(sys.stdin.readline()) for _ in range(n)]
+
 def printans(cats):
     print('+')
     for p in cats:
