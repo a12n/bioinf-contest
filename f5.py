@@ -11,6 +11,17 @@ def parsechems(s, sep=None):
 def parsereaction(s):
     return tuple(map(lambda t: parsechems(t, '+'), s.split('<=>')))
 
+def printreq(descrs):
+    print('?')
+    for c, p in descrs:
+        print(' '.join(c))
+        print(' '.join(p))
+
+def printans(cats):
+    print('+')
+    for p in cats:
+        print(' '.join(p) if p else '-')
+
 with open(sys.argv[1], 'r') as f:
     reactions = list(map(parsereaction, f))
 
