@@ -11,8 +11,10 @@ def intersects(a, b):
 
 class DIS:
     def __init__(self, ivlist):
-        self.first = sorted((iv[0] for iv in ivlist))
-        self.last = sorted((iv[1] for iv in ivlist))
+        self.first = [iv[0] for iv in ivlist]
+        self.last = [iv[1] for iv in ivlist]
+        self.first.sort()
+        self.last.sort()
 
     def __len__(self):
         return len(self.first)
