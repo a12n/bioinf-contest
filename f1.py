@@ -75,6 +75,8 @@ if __name__ == '__main__':
     n, m = map(int, stdin.readline().split())
     genes = [IntervalTree(intervals_of_str(stdin.readline())) for _ in range(n)]
     reads = [intervals_of_str(stdin.readline()) for _ in range(m)]
+    for r in reads:
+        shuffle(r)
 
     ans = [0] * n
     intersects = [[False] * n for _ in range(m)]
