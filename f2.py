@@ -2,7 +2,6 @@
 
 import itertools
 import logging
-from logging import debug
 from sys import stdin
 
 logging.basicConfig(format='%(message)s', level=logging.DEBUG)
