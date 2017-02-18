@@ -37,6 +37,9 @@ def kmers_set(s, k):
         kmers_set_cache[key] = set(kmers(s, k))
     return kmers_set_cache[key]
 
+def issub(s, t):
+    return s.find(t) != -1
+
 hard_vsn = len(argv) > 1 and 'hard'.startswith(argv[1].lower())
 logging.debug('hard_vsn %s', hard_vsn)
 
@@ -50,6 +53,8 @@ def reconstruct():
             for j in range(len(state)):
                 if i == j:
                     continue
+                if issub(state[i], state[j]):
+                    return (state[i], i, j)
                 # TODO: try different overlap lenghts
                 s = overlap(state[i], state[j])
                 skmers = kmers_set(s, k)
