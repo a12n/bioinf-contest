@@ -2,10 +2,10 @@
 
 from sys import stdin
 
-class IntervalSet:
-    def _intersects(a, b):
-        return a[0] <= b[1] and b[0] <= a[1]
+def intersects0(a, b):
+    return a[0] <= b[1] and b[0] <= a[1]
 
+class IntervalSet:
     def __init__(self, l):
         # self.first = [l[2 * i] for i in range(len(l) // 2)]
         # self.last = [l[2 * i + 1] for i in range(len(l) // 2)]
@@ -16,7 +16,7 @@ class IntervalSet:
     def intersects(self, other):
         for i in self.intervals:
             for j in other.intervals:
-                if IntervalSet._intersects(i, j):
+                if intersects0(i, j):
                     return True
         return False
 
