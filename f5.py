@@ -5,6 +5,8 @@ import sys
 
 logging.basicConfig(format='%(message)s', level=logging.DEBUG)
 
+NUM_DESCRS = 96
+
 def parsechems(s, sep=None):
     return set(map(str.strip, s.split(sep)))
 
