@@ -65,21 +65,6 @@ class IntervalTree:
 
 # --------------------------------------------------------------------------------------
 
-class IntervalSet:
-    def __init__(self, l):
-        # self.first = [l[2 * i] for i in range(len(l) // 2)]
-        # self.last = [l[2 * i + 1] for i in range(len(l) // 2)]
-        # self.first.sort()
-        # self.last.sort()
-        self.intervals = [(l[2 * i], l[2 * i + 1]) for i in range(len(l) // 2)]
-
-    def intersects(self, other):
-        for i in self.intervals:
-            for j in other.intervals:
-                if intersects0(i, j):
-                    return True
-        return False
-
 def intervals_of_list(l):
     return [(l[2 * i], l[2 * i + 1]) for i in range(len(l) // 2)]
 
