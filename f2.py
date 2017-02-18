@@ -31,6 +31,13 @@ def kmers(s, k):
     for i in range(len(s) - k + 1):
         yield s[i:(i + k)]
 
+kmers_set_cache = dict()
+def kmers_set(s, k):
+    key = (s, k)
+    if not key in kmers_set_cache:
+        kmers_set_cache[key] = set(kmers(s, k))
+    return kmers_set_cache[key]
+
 def reconstruct():
     n, k = map(int, stdin.readline().split())
     origkmers = set((stdin.readline().rstrip() for _ in range(n)))
