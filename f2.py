@@ -2,7 +2,7 @@
 
 import itertools
 import logging
-from sys import stdin
+from sys import argv, stdin
 
 logging.basicConfig(format='%(message)s', level=logging.DEBUG)
 
@@ -36,6 +36,9 @@ def kmers_set(s, k):
     if not key in kmers_set_cache:
         kmers_set_cache[key] = set(kmers(s, k))
     return kmers_set_cache[key]
+
+hard_vsn = len(argv) > 1 and 'hard'.startswith(argv[1].lower())
+logging.debug('hard_vsn %s', hard_vsn)
 
 def reconstruct():
     n, k = map(int, stdin.readline().split())
