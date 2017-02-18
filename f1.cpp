@@ -310,7 +310,8 @@ main()
         }
     }
 
-    const auto ans = dumb_solution(genes, reads);
+    // const auto ans = dumb_solution(genes, reads);
+    const auto ans = interval_tree_solution(genes, reads);
     for (const auto k : ans) {
         cout << k << endl;
     }
