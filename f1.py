@@ -79,20 +79,19 @@ if __name__ == '__main__':
         shuffle(r)
 
     ans = [0] * n
-    intersects = [[False] * n for _ in range(m)]
+    intersects = [-1] * m
 
     for j in range(len(reads)):
         for i in range(len(genes)):
-            intersects[j][i] = genes[i].intersects_interval_list(reads[j])
-    # print(intersects)
+            if intersects[j] == -1:
+                if genes[i].intersects_interval_list(reads[j]):
+                    intersects[j] = i
+            elif intersects[j] != -2:
+                if genes[i].intersects_interval_list(reads[j]):
+                    intersects[j] = -2
 
-    for j in range(len(reads)):
-        try:
-            i = intersects[j].index(True, 0)
-            try:
-                intersects[j].index(True, i + 1)
-            except ValueError:
-                ans[i] += 1
-        except ValueError:
-            pass
+    for i in intersects:
+        if i >= 0:
+            ans[i] += 1
+
     print('\n'.join(map(str, ans)))
