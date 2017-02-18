@@ -8,7 +8,7 @@ logging.basicConfig(format='%(message)s', level=logging.DEBUG)
 NUM_DESCRS = 96
 
 def parsechems(s, sep=None):
-    return set(map(str.strip, s.split(sep)))
+    return list(map(str.strip, s.split(sep)))
 
 def parsereaction(s):
     return tuple(map(lambda t: parsechems(t, '+'), s.split('<=>')))
@@ -36,7 +36,7 @@ with open(sys.argv[2], 'r') as f:
 logging.debug('%d reactions %s', len(reactions), reactions)
 logging.debug('%d proteins %s', len(proteins), proteins)
 
-catalyze = [set()] * len(reactions)
+catalyze = [[] for _ in range(len(reactions))]
 
 def experiment():
     try:
