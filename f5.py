@@ -30,3 +30,9 @@ with open(sys.argv[2], 'r') as f:
 
 logging.debug('%d reactions %s', len(reactions), reactions)
 logging.debug('%d proteins %s', len(proteins), proteins)
+
+catalyze = [set()] * len(reactions)
+
+# TODO
+
+printans(catalyze)
