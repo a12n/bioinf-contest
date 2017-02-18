@@ -7,6 +7,20 @@ logging.basicConfig(format='%(message)s', level=logging.DEBUG)
 
 NUM_DESCRS = 96
 
+def sublists(l, n=NUM_DESCRS):
+    # TODO
+    i = 0
+    while True:
+        sub = l[(i * n):((i + 1) * n)]
+        if not sub:
+            break
+        yield sub
+        i += 1
+
+def prefixes(l):
+    for n in range(1, len(l) + 1):
+        yield l[:n]
+
 def parsechems(s, sep=None):
     return list(map(str.strip, s.split(sep)))
 
