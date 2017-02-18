@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from random import shuffle
 from sys import stdin
 
 def intersects0(a, b):
