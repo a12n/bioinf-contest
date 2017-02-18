@@ -32,6 +32,7 @@ std = numpy.std(list(map(gccontent, subs)))
 print('mean', mean, 'std', std)
 
 x = [k * i for i in range(len(subs))]
+plot.grid(True)                 # TODO: grin on y for mean and std multiplies
 plot.plot(x, list(map(gccontent, subs)), '-r', \
           x, [mean - std] * len(x), '-g', \
           x, [mean] * len(x), '-b', \
