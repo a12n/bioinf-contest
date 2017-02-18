@@ -36,6 +36,12 @@ class DIS:
         for iv in zip(other.first, other.last):
             if self._intersects1(iv):
                 return True
+        # if self._intersects1((other.first[0], other.last[0])):
+        #     return True
+        # for i in range(1, len(other) // 2 + 1):
+        #     if self._intersects1((other.first[+i], other.last[+i])) or \
+        #        self._intersects1((other.first[-i], other.last[-i])):
+        #         return True
         return False
 
 # --------------------------------------------------------------------------------------
