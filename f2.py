@@ -55,6 +55,10 @@ def reconstruct():
                     continue
                 if issub(state[i], state[j]):
                     return (state[i], i, j)
+        for i in range(len(state)):
+            for j in range(len(state)):
+                if i == j:
+                    continue
                 # TODO: try different overlap lenghts
                 s = overlap(state[i], state[j])
                 skmers = kmers_set(s, k)
