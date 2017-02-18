@@ -25,12 +25,16 @@ class DIS:
             return intersects((self.first[i - 1], self.last[i - 1]), iv)
         return False
 
+    def _endpoints(self):
+        return (self.first[0], self.last[-1])
+
     def intersects(self, other):
         if len(other) > len(self):
             return other.intersects(self)
-        for iv in zip(other.first, other.last):
-            if self._intersects1(iv):
-                return True
+        if intersects(self._endpoints(), other._endpoints()):
+            for iv in zip(other.first, other.last):
+                if self._intersects1(iv):
+                    return True
         return False
 
 # --------------------------------------------------------------------------------------
