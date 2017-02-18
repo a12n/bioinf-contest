@@ -59,6 +59,18 @@ def experiment():
         # All reactions have known catalyzers
         return False
     logging.debug('i %d, reactions[i] %s', i, reactions[i])
+    chems = reactions[i][0]
+    descrs = []
+    for prots in sublists(proteins):
+        for prefix in prefixes(prots):
+            descrs.append((chems, prefix))
+        logging.debug('descrs %s', descrs)
+        printreq(descrs)
+        resp = readresp(len(descrs))
+        for j in range(len(resp)):
+            if set(resp[j]).issuperset(set(reactions[i][1])):
+                catalyzers[i].extend(descrs[j][1])
+                return True
     return False
 
 while True:
