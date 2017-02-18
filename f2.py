@@ -55,7 +55,7 @@ def reconstruct():
                 if any(not skmers.isdisjoint(kmers_set(state[m], k)) \
                        for m in range(len(state)) if m != i and m != j):
                     continue
-                return (s, state[i], state[j])
+                return (s, i, j)
         return None
     # TODO
     stop = False
@@ -63,8 +63,8 @@ def reconstruct():
         res = mergekmers()
         if res:
             s, i, j = res
-            state.remove(i)
-            state.remove(j)
+            del(state[max(i, j)])
+            del(state[min(i, j)])
             state.insert(0, s)
         else:
             stop = True
