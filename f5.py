@@ -50,11 +50,11 @@ with open(sys.argv[2], 'r') as f:
 logging.debug('%d reactions %s', len(reactions), reactions)
 logging.debug('%d proteins %s', len(proteins), proteins)
 
-catalyze = [[] for _ in range(len(reactions))]
+catalyzers = [[] for _ in range(len(reactions))]
 
 def experiment():
     try:
-        i = next((i for i in range(len(reactions)) if not catalyze[i]))
+        i = next((i for i in range(len(reactions)) if not catalyzers[i]))
     except StopIteration:
         # All reactions have known catalyzers
         return None
@@ -71,4 +71,4 @@ while True:
     except KeyboardInterrupt:
         break
 
-printans(catalyze)
+printans(catalyzers)
