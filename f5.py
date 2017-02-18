@@ -57,10 +57,9 @@ def experiment():
         i = next((i for i in range(len(reactions)) if not catalyzers[i]))
     except StopIteration:
         # All reactions have known catalyzers
-        return None
+        return False
     logging.debug('i %d, reactions[i] %s', i, reactions[i])
-    # TODO
-    return None
+    return False
 
 while True:
     try:
