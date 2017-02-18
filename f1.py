@@ -43,7 +43,7 @@ class IntervalTree:
 
     def __init__(self, intervals):
         self.root = None
-        intervals = intervals.copy()
+        # intervals = intervals.copy()
         shuffle(intervals)
         for interval in intervals:
             self.root = IntervalTree.Node.insert(self.root, interval)
