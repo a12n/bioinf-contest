@@ -25,30 +25,27 @@ def parts(s, n):
 # print(gccontent(s))
 # print(list(map(gccontent, parts(s, 10))))
 
-k = 50
+k = 100
 subs = list(parts(s, k))
 mean = gccontent(s)
 std = numpy.std(list(map(gccontent, subs)))
 print('mean', mean, 'std', std)
 
-def weirdgc(subs, mean, std, alpha=2.2):
-    for i in range(len(subs)):
-        gc = gccontent(subs[i])
-        if abs(gc - mean) > (alpha * std):
-            yield (i, gc)
+plot.plot(list(map(gccontent, subs)))
+plot.show()
 
-weird = list(weirdgc(subs, mean, std))
+# def weirdgc(subs, mean, std, alpha=2.2):
+#     for i in range(len(subs)):
+#         gc = gccontent(subs[i])
+#         if abs(gc - mean) > (alpha * std):
+#             yield (i, gc)
+#
+# weird = list(weirdgc(subs, mean, std))
+#
+# for i, gc in weird:
+#     print('Part at', k * i, 'GC content', gc, 'is weird')
+#
+# first, _ = weird[0]
+# last, _ = weird[-1]
 
-for i, gc in weird:
-    print('Part at', k * i, 'GC content', gc, 'is weird')
-
-first, _ = weird[0]
-last, _ = weird[-1]
-
-print('first', k * first, 'last', k * last)
-
-# plot.plot(list(map(gccontent, parts(s, len(s) // 1000))))
-# plot.show()
-
-# for t in parts(s, 100):
-#     print(t[:15], gccontent(t))
+# print('first', k * first, 'last', k * last)
