@@ -35,8 +35,10 @@ def reconstruct():
     n, k = map(int, stdin.readline().split())
     origkmers = set((stdin.readline().rstrip() for _ in range(n)))
     assert all(len(kmer) == k for kmer in origkmers)
+    state = list(origkmers)
     # TODO
-    print(0)
+    print(len(state))
+    print('\n'.join(state))
 
 if __name__ == '__main__':
     try:
