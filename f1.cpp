@@ -1,5 +1,6 @@
 #include <iostream>
 #include <iterator>
+#include <memory>
 #include <sstream>
 #include <string>
 #include <utility>
@@ -12,6 +13,7 @@ using std::endl;
 using std::getline;
 using std::istream;
 using std::istream_iterator;
+using std::unique_ptr;
 using std::istringstream;
 using std::ostream;
 using std::pair;
@@ -137,6 +139,103 @@ dumb_solution(const interval_list_list& genes, const interval_list_list& reads)
 }
 
 //----------------------------------------------------------------------------
+
+class interval_tree
+{
+private:
+    struct node;
+    typedef unique_ptr<node> node_ptr;
+
+    struct node
+    {
+        explicit
+        node(const interval& i) :
+            i(i),
+            max(i.second),
+            left(),
+            right()
+        {
+        }
+
+        interval i;
+        size_t max;
+        node_ptr left;
+        node_ptr right;
+    };
+
+    node_ptr root;
+
+    static void
+    insert(node_ptr& root, const interval& i)
+    {
+        if (! root) {
+            root.reset(new node(i));
+            return;
+        }
+        if (i.first < root->i.first) {
+            insert(root->left, i);
+        } else {
+            insert(root->right, i);
+        }
+        if (root->max < i.second) {
+            root->max = i.second;
+        }
+    }
+
+    static bool
+    intersects(const node_ptr& root, const interval& i)
+    {
+        if (! root) {
+            return false;
+        }
+        if (::intersects(root->i, i)) {
+            return true;
+        } else if (root->left && root->left->max >= i.first) {
+            return intersects(root->left, i);
+        } else {
+            return intersects(root->right, i);
+        }
+    }
+
+public:
+    explicit
+    interval_tree(const interval_list& il)
+    {
+        for (const interval & i : il) {
+            insert(root, i);
+        }
+    }
+
+    bool
+    intersects(const interval& i) const
+    {
+        return intersects(root, i);
+    }
+
+    bool
+    intersects(const interval_list& il) const
+    {
+        for (const interval & i : il) {
+            if (intersects(i)) {
+                return true;
+            }
+        }
+        return false;
+    }
+};
+
+typedef vector<interval_tree> interval_tree_list;
+
+interval_tree_list
+make_interval_tree_list(const interval_list_list& ill)
+{
+    interval_tree_list ans;
+    ans.reserve(ill.size());
+    for (const interval_list& il : ill) {
+        ans.push_back(interval_tree(il));
+    }
+    return ans;
+}
 
 uint_list
 interval_tree_solution(const interval_list& genes, const interval_list& reads)
