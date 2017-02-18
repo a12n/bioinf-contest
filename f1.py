@@ -5,6 +5,65 @@ from sys import stdin
 def intersects0(a, b):
     return a[0] <= b[1] and b[0] <= a[1]
 
+class IntervalTree:
+    class Node:
+        def __init__(self, interval):
+            self.interval = interval
+            self.max = interval[1]
+            self.left = None
+            self.right = None
+
+        def insert(root, interval):
+            if not root:
+                return IntervalTree.Node(interval)
+            if interval[0] < root.interval[0]:
+                root.left = IntervalTree.Node.insert(root.left, interval)
+            else:
+                root.right = IntervalTree.Node.insert(root.right, interval)
+            if root.max < interval[1]:
+                root.max = interval[1]
+            return root
+
+        def lookup(root, interval):
+            if not root:
+                return None
+            if intersects0(root.interval, interval):
+                return root.interval
+            if root.left and root.left.max >= interval[0]:
+                return IntervalTree.Node.lookup(root.left, interval)
+            else:
+                return IntervalTree.Node.lookup(root.right, interval)
+
+        def inorder(root):
+            if root:
+                IntervalTree.Node.inorder(root.left)
+                yield root
+                IntervalTree.Node.inorder(root.right)
+
+    def __init__(self, intervals):
+        self.root = None
+        intervals = intervals.copy()
+        shuffle(intervals)
+        for interval in intervals:
+            self.root = IntervalTree.Node.insert(self.root, interval)
+
+    def intervals(self):
+        return map(lambda node: node.interval, IntervalTree.Node.inorder(self.root))
+
+    def intersects_interval(self, interval):
+        return IntervalTree.Node.lookup(self.root, interval) != None
+
+    def intersects_interval_list(self, intervals):
+        return any(self.intersects_interval(interval) for interval in intervals)
+
+    def intersects(self, other):
+        for interval in other.intervals():
+            if self.intersects_interval(interval):
+                return True
+        return False
+
+# --------------------------------------------------------------------------------------
+
 class IntervalSet:
     def __init__(self, l):
         # self.first = [l[2 * i] for i in range(len(l) // 2)]
