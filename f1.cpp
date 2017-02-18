@@ -238,11 +238,32 @@ make_interval_tree_list(const interval_list_list& ill)
 }
 
 uint_list
-interval_tree_solution(const interval_list& genes, const interval_list& reads)
+interval_tree_solution(const interval_list_list& genes, const interval_list_list& reads)
 {
-    uint_list ans(genes.size());
+    uint_list ans(genes.size(), 0);
+    int_list tmp(reads.size(), -1);
 
-    // TODO
+    const auto reads2(make_interval_tree_list(reads));
+
+    for (size_t j = 0; j < reads.size(); ++j) {
+        for (size_t i = 0; i < genes.size(); ++i) {
+            if (tmp[j] == -1) {
+                if (reads2[j].intersects(genes[i])) {
+                    tmp[j] = static_cast<int>(i);
+                }
+            } else if (tmp[j] != -2) {
+                if (reads2[j].intersects(genes[i])) {
+                    tmp[j] = -2;
+                }
+            }
+        }
+    }
+
+    for (const int i : tmp) {
+        if (i >= 0) {
+            ++ans[i];
+        }
+    }
 
     return ans;
 }
