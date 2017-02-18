@@ -46,6 +46,8 @@ def reconstruct():
     def mergekmers():
         for i in range(len(state)):
             for j in range(len(state)):
+                if i == j:
+                    continue
                 # TODO: try different overlap lenghts
                 s = overlap(state[i], state[j])
                 skmers = kmers_set(s, k)
