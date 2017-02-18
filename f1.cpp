@@ -86,15 +86,10 @@ print_interval_list(ostream& os, const interval_list& il)
     }
 }
 
-bool
+inline bool
 intersects(const interval& a, const interval& b)
 {
-    const bool ans = a.first <= b.second && b.first <= a.second;
-    // print_interval(cerr, a);
-    // cerr << " x ";
-    // print_interval(cerr, b);
-    // cerr << " = " << ans << endl;
-    return ans;
+    return a.first <= b.second && b.first <= a.second;
 }
 
 //----------------------------------------------------------------------------
@@ -102,25 +97,14 @@ intersects(const interval& a, const interval& b)
 bool
 intersects(const interval_list& a, const interval_list& b)
 {
-    bool ans = false;
     for (const auto & ai : a) {
         for (const auto & bi : b) {
             if (intersects(ai, bi)) {
-                ans = true;
+                return true;
             }
-            if (ans) {
-                break;
-            }
-        }
-        if (ans) {
-            break;
         }
     }
-    // print_interval_list(cerr, a);
-    // cerr << " x ";
-    // print_interval_list(cerr, b);
-    // cerr << " = " << ans << endl;
-    return ans;
+    return false;
 }
 
 uint_list
@@ -158,6 +142,7 @@ uint_list
 interval_tree_solution(const interval_list& genes, const interval_list& reads)
 {
     uint_list ans(genes.size());
+
     // TODO
 
     return ans;
