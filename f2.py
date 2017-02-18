@@ -55,9 +55,10 @@ def reconstruct():
                 skmers = kmers_set(s, k)
                 if not skmers.issubset(origkmers):
                     continue
-                if any(not skmers.isdisjoint(kmers_set(state[m], k)) \
-                       for m in range(len(state)) if m != i and m != j):
-                    continue
+                if not hard_vsn:
+                    if any(not skmers.isdisjoint(kmers_set(state[m], k)) \
+                           for m in range(len(state)) if m != i and m != j):
+                        continue
                 return (s, i, j)
         return None
     # TODO
