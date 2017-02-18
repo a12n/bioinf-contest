@@ -1,96 +1,62 @@
 #!/usr/bin/env python3
 
-from random import shuffle
+from bisect import bisect_right
 from sys import stdin
+import logging
 
-def intersects0(a, b):
+logging.basicConfig(format='%(message)s', level=logging.DEBUG)
+
+def intersects(a, b):
     return a[0] <= b[1] and b[0] <= a[1]
 
-class IntervalTree:
-    class Node:
-        def __init__(self, interval):
-            self.interval = interval
-            self.max = interval[1]
-            self.left = None
-            self.right = None
+class DIS:
+    def __init__(self, ivlist):
+        self.first = sorted((iv[0] for iv in ivlist))
+        self.last = sorted((iv[1] for iv in ivlist))
 
-        def insert(root, interval):
-            if not root:
-                return IntervalTree.Node(interval)
-            if interval[0] < root.interval[0]:
-                root.left = IntervalTree.Node.insert(root.left, interval)
-            else:
-                root.right = IntervalTree.Node.insert(root.right, interval)
-            if root.max < interval[1]:
-                root.max = interval[1]
-            return root
+    def __len__(self):
+        return len(self.first)
 
-        def lookup(root, interval):
-            if not root:
-                return None
-            if intersects0(root.interval, interval):
-                return root.interval
-            if root.left and root.left.max >= interval[0]:
-                return IntervalTree.Node.lookup(root.left, interval)
-            else:
-                return IntervalTree.Node.lookup(root.right, interval)
-
-        def inorder(root):
-            if root:
-                IntervalTree.Node.inorder(root.left)
-                yield root
-                IntervalTree.Node.inorder(root.right)
-
-    def __init__(self, intervals):
-        self.root = None
-        # intervals = intervals.copy()
-        shuffle(intervals)
-        for interval in intervals:
-            self.root = IntervalTree.Node.insert(self.root, interval)
-
-    def intervals(self):
-        return map(lambda node: node.interval, IntervalTree.Node.inorder(self.root))
-
-    def intersects_interval(self, interval):
-        return IntervalTree.Node.lookup(self.root, interval) != None
-
-    def intersects_interval_list(self, intervals):
-        return any(self.intersects_interval(interval) for interval in intervals)
+    def _intersects1(self, iv):
+        i = bisect_right(self.first, iv[1])
+        if i != 0:
+            return intersects((self.first[i - 1], self.last[i - 1]), iv)
+        return False
 
     def intersects(self, other):
-        for interval in other.intervals():
-            if self.intersects_interval(interval):
+        if len(other) > len(self):
+            return other.intersects(self)
+        for iv in zip(other.first, other.last):
+            if self._intersects1(iv):
                 return True
         return False
 
 # --------------------------------------------------------------------------------------
 
-def intervals_of_list(l):
+def ivsoflist(l):
     return [(l[2 * i], l[2 * i + 1]) for i in range(len(l) // 2)]
 
-def intervals_of_str(s):
-    return intervals_of_list(list(map(int, s.split())))
+def ivsofstr(s):
+    return ivsoflist(list(map(int, s.split())))
 
 if __name__ == '__main__':
     n, m = map(int, stdin.readline().split())
-    genes = [IntervalTree(intervals_of_str(stdin.readline())) for _ in range(n)]
-    reads = [intervals_of_str(stdin.readline()) for _ in range(m)]
-    for r in reads:
-        shuffle(r)
+    genes = [DIS(ivsofstr(stdin.readline())) for _ in range(n)]
+    reads = [DIS(ivsofstr(stdin.readline())) for _ in range(m)]
 
     ans = [0] * n
-    intersects = [-1] * m
+    tmp = [-1] * m
 
     for j in range(len(reads)):
         for i in range(len(genes)):
-            if intersects[j] == -1:
-                if genes[i].intersects_interval_list(reads[j]):
-                    intersects[j] = i
-            elif intersects[j] != -2:
-                if genes[i].intersects_interval_list(reads[j]):
-                    intersects[j] = -2
+            if tmp[j] == -1:
+                if reads[j].intersects(genes[i]):
+                    tmp[j] = i
+            elif tmp[j] != -2:
+                if reads[j].intersects(genes[i]):
+                    tmp[j] = -2
 
-    for i in intersects:
+    for i in tmp:
         if i >= 0:
             ans[i] += 1
 
