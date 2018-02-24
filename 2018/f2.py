@@ -11,10 +11,12 @@ logging.basicConfig(format="%(message)s", level=logging.DEBUG)
 
 class Network:
     def __init__(self, f):
+        debug("reading from %s", f)
         try:
             self.n, self.m = map(int, f.readline().split())
         except ValueError:
             raise EOFError
+        debug("n %s, m %s", self.n, self.m)
         self.outgoing = dict()
         self.incoming = dict()
         for _ in range(self.m):
@@ -24,8 +26,10 @@ class Network:
         univ = set(range(1, self.n + 1))
         self.leaves = univ.difference(self.outgoing.keys())
         self.sources = univ.difference(self.incoming.keys())
+        debug("sources %s, leaves %s", self.sources, self.leaves)
         self.coloring = list(map(int, f.readline().split()))
-        self.avail_colors = u.difference(self.coloring)
+        self.avail_colors = univ.difference(self.coloring)
+        debug("unassigned colors %s", self.avail_colors)
 
     def parents(self, u):
         return self.incoming[u]
