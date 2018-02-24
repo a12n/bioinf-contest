@@ -32,10 +32,16 @@ class Network:
         debug("unassigned colors %s", self.avail_colors)
 
     def parents(self, u):
-        return self.incoming[u]
+        try:
+            return self.incoming[u]
+        except KeyError:
+            return set()
 
     def children(self, u):
-        return self.outgoing[u]
+        try:
+            return self.outgoing[u]
+        except KeyError:
+            return set()
 
     def siblings(self, u):
         ans = set()
