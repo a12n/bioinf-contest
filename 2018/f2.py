@@ -30,6 +30,7 @@ class Network:
         self.coloring = list(map(int, f.readline().split()))
         self.avail_colors = univ.difference(self.coloring)
         debug("unassigned colors %s", self.avail_colors)
+        self._depth = dict()
 
     def parents(self, u):
         try:
@@ -58,6 +59,16 @@ class Network:
 
     def uncolored(self):
         return set((i + 1 for i, c in enumerate(self.coloring) if c == -1))
+
+    def depth(self, u):
+        if u not in self._depth:
+            try:
+                # XXX: max?
+                self._depth[u] = max((self.depth(v) for v in self.parents(u))) + 1
+            except ValueError:
+                # No parents
+                self._depth[u] = 0
+        return self._depth[u]
 
     ##
 
