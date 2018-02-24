@@ -11,7 +11,10 @@ logging.basicConfig(format="%(message)s", level=logging.DEBUG)
 
 class Network:
     def __init__(self, f):
-        self.n, self.m = map(int, f.readline().split())
+        try:
+            self.n, self.m = map(int, f.readline().split())
+        except ValueError:
+            raise EOFError
         self.outgoing = dict()
         self.incoming = dict()
         for _ in range(self.m):
@@ -108,5 +111,5 @@ if __name__ == "__main__":
     while True:
         try:
             species_recovering()
-        except ValueError:
+        except EOFError:
             break
