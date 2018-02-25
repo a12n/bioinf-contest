@@ -28,8 +28,15 @@ def gc_content_clusters():
         ans.setdefault(c, set()).add(ident)
     return ans
 
+def dumb_clusters():
+    ans = dict()
+    for ident, seq in read_fasta(stdin):
+        ans.setdefault(ident, set()).add(ident)
+    return ans
+
 if __name__ == "__main__":
     ans = gc_content_clusters()
+    # ans = dumb_clusters()
     for cluster, ident_set in ans.items():
         for ident in ident_set:
             print(ident, cluster)
