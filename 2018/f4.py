@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import logging
+
+from bisect import bisect
 from logging import debug
 from sys import stdin
 from time import time
@@ -28,6 +30,14 @@ def gc_content_clusters():
         ans.setdefault(c, set()).add(ident)
     return ans
 
+def gc_content2_clusters():
+    clusters = [(i / 1000) for i in range(0, 100 * 1000, 50)]
+    ans = dict()
+    for ident, seq in read_fasta(stdin):
+        c = bisect(clusters, gc_content(seq))
+        ans.setdefault(c, set()).add(ident)
+    return ans
+
 def dumb_clusters():
     ans = dict()
     for ident, seq in read_fasta(stdin):
@@ -35,8 +45,9 @@ def dumb_clusters():
     return ans
 
 if __name__ == "__main__":
-    ans = gc_content_clusters()
+    # ans = gc_content_clusters()
     # ans = dumb_clusters()
+    ans = gc_content2_clusters()
     for cluster, ident_set in ans.items():
         for ident in ident_set:
             print(ident, cluster)
