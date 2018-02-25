@@ -12,6 +12,9 @@ logging.basicConfig(format="%(message)s", level=logging.DEBUG)
 def gc_content(s):
     return (s.count("G") + s.count("C")) / len(s)
 
+def purine_content(s):
+    return (s.count("A") + s.count("G")) / len(s)
+
 def read_fasta(f):
     ans = []
     while True:
@@ -30,11 +33,11 @@ def gc_content_clusters():
         ans.setdefault(c, set()).add(ident)
     return ans
 
-def gc_content2_clusters():
+def content_clusters(content_func):
     clusters = [(i / 1000) for i in range(0, 100 * 1000, 50)]
     ans = dict()
     for ident, seq in read_fasta(stdin):
-        c = bisect(clusters, gc_content(seq))
+        c = bisect(clusters, content_func(seq))
         ans.setdefault(c, set()).add(ident)
     return ans
 
@@ -47,7 +50,8 @@ def dumb_clusters():
 if __name__ == "__main__":
     # ans = gc_content_clusters()
     # ans = dumb_clusters()
-    ans = gc_content2_clusters()
+    ans = content_clusters(gc_content)
+    # ans = content_clusters(purine_content)
     for cluster, ident_set in ans.items():
         for ident in ident_set:
             print(ident, cluster)
