@@ -20,12 +20,16 @@ def read_fasta(f):
         ans.append((ident, seq))
     return ans
 
-if __name__ == "__main__":
+def gc_content_based():
     ans = dict()
     for ident, seq in read_fasta(stdin):
         # c = round(100 * gc_content(seq))
         c = round(1000 * gc_content(seq))
         ans.setdefault(c, set()).add(ident)
-    for c, ident_set in ans.items():
+    return ans
+
+if __name__ == "__main__":
+    ans = gc_content_based()
+    for cluster, ident_set in ans.items():
         for ident in ident_set:
-            print(ident, hash(c))
+            print(ident, cluster)
