@@ -10,8 +10,7 @@ def beeskg(n1, a, b):
     try:
         while True:
             n2 = max(a * n1 - b * n1**2, 0)
-            diff = abs(n2 - n1)
-            if diff < 10E-12:
+            if abs(n2 - n1) < 10E-12:
                 return round(n2, 4)
             if i > 100000:
                 return round((n1 + n2) / 2, 4)
