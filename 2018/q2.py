@@ -137,22 +137,17 @@ def eliminates_interval(codon_index, prev_codon, next_codon, positions):
 
 def n_changes(rna, intervals):
     rf = codons(rna)
-    eq = codon_equivs_list(rf)
-    # debug("equivs %s", eq)
+    debug("codons %s", rf)
     codons_by_interval = dict()
     intervals_by_codon = dict()
     for interval_index, interval in enumerate(intervals):
         for codon_index in affected_codons(interval):
             codons_by_interval.setdefault(interval_index, set()).add(codon_index)
             intervals_by_codon.setdefault(codon_index, set()).add(interval_index)
-    # debug("codons_by_interval %s", codons_by_interval)
-    # debug("intervals_by_codon %s", intervals_by_codon)
-    # equivs = codon_equivs_list(codons)
-    # equivs2 = []
-    # for codon_index, eq in enumerate(equivs):
-    #     for dist, codon in eq:
-    #         for i in intervals_by_codon[ci]:
-    #             pass
+    debug("codons_by_interval %s", codons_by_interval)
+    debug("intervals_by_codon %s", intervals_by_codon)
+    eq = codon_equivs_list(rf)
+    debug("equivs %s", eq)
     # TODO
     return -1
 

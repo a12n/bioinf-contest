@@ -9,6 +9,23 @@ from time import time
 
 logging.basicConfig(format="%(message)s", level=logging.DEBUG)
 
+def edit_dist(s, t):
+    n = len(s)
+    m = len(t)
+    d = [[0] * (m + 1) for _ in range(2)]
+    for j in range(1, m + 1):
+        d[0][j] = j
+    for i in range(1, n + 1):
+        d[i % 2][0] = i
+        for j in range(1, m + 1):
+            cost = 0 if s[i - 1] == t[j - 1] else 1
+            delt = d[(i - 1) % 2][j] + 1
+            ins = d[i % 2][j - 1] + 1
+            subst = d[(i - 1) % 2][j - 1] + cost
+            dist = min(delt, ins, subst)
+            d[i % 2][j] = dist
+    return d[n % 2][m]
+
 def gc_content(s):
     return (s.count("G") + s.count("C")) / len(s)
 
@@ -34,7 +51,7 @@ def gc_content_clusters():
     return ans
 
 def content_clusters(content_func):
-    clusters = [(i / 1000) for i in range(0, 100 * 1000, 50)]
+    clusters = [(i / 1000) for i in range(0, 100 * 1000, 30)]
     ans = dict()
     for ident, seq in read_fasta(stdin):
         c = bisect(clusters, content_func(seq))

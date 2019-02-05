@@ -11,24 +11,24 @@ def hamm_dist(s, t):
     assert(len(s) == len(t))
     return sum(si != ti for si, ti in zip(s, t))
 
-# def edit_dist(s, t, l=None):
-#     n = len(s)
-#     m = len(t)
-#     d = [[0] * (m + 1) for _ in range(2)]
-#     for j in range(1, m + 1):
-#         d[0][j] = j
-#     for i in range(1, n + 1):
-#         d[i % 2][0] = i
-#         for j in range(1, m + 1):
-#             cost = 0 if s[i - 1] == t[j - 1] else 1
-#             delt = d[(i - 1) % 2][j] + 1
-#             ins = d[i % 2][j - 1] + 1
-#             subst = d[(i - 1) % 2][j - 1] + cost
-#             dist = min(delt, ins, subst)
-#             if l and dist > l:
-#                 raise RuntimeError
-#             d[i % 2][j] = dist
-#     return d[n % 2][m]
+def edit_dist(s, t, l=None):
+    n = len(s)
+    m = len(t)
+    d = [[0] * (m + 1) for _ in range(2)]
+    for j in range(1, m + 1):
+        d[0][j] = j
+    for i in range(1, n + 1):
+        d[i % 2][0] = i
+        for j in range(1, m + 1):
+            cost = 0 if s[i - 1] == t[j - 1] else 1
+            delt = d[(i - 1) % 2][j] + 1
+            ins = d[i % 2][j - 1] + 1
+            subst = d[(i - 1) % 2][j - 1] + cost
+            dist = min(delt, ins, subst)
+            if l and dist > l:
+                raise RuntimeError
+            d[i % 2][j] = dist
+    return d[n % 2][m]
 
 def find_repeats_hamm(s, t_max):
     ans = []
@@ -44,7 +44,7 @@ def find_repeats_hamm(s, t_max):
     return ans
 
 def tandem_repeat(s):
-    return max(find_repeats_hamm(s, time() + 60), key=lambda r: r[1] + r[2])
+    return max(find_repeats_hamm(s, time() + 2400), key=lambda r: r[1] + r[2])
 
 while True:
     header = stdin.readline()
