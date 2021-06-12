@@ -7,6 +7,12 @@ then
 fi
 
 PROG=$(readlink -f $1)
+if [ ! -x $PROG ]
+then
+    echo "No executable $PROG found"
+    exit 1
+fi
+
 PROG_ID=$2
 if [ -z "$PROG_ID" ]
 then
