@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+
+from sys import stdin
+
+for _ in range(int(stdin.readline())):
+    n, l = map(int, stdin.readline().split())
+    marks = []
+    for _ in range(n):
+        s = stdin.readline().strip()
+        assert(len(s) == l)
+        marks.append(s)
+    states = dict()
+    for i in range(l):
+        s = "".join(marks[j][i] for j in range(n))
+        if s not in states:
+            states[s] = len(states) + 1
+    print(len(states))
+    states_int = []
+    for i in range(l):
+        s = "".join(marks[j][i] for j in range(n))
+        states_int.append(states[s])
+    print(" ".join(map(str, states_int)))
