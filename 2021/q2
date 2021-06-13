@@ -108,29 +108,14 @@ for test_i in range(test_num):
     m, k, n = map(int, stdin.readline().split())
     print("m", m, "k", k, "n", n, file=stderr)
     metabolites = list(map(Decimal, stdin.readline().split()))
-    # metabolites_index = sorted(range(len(metabolites)), key=lambda i: metabolites[i])
+    metabolites_index = sorted(range(len(metabolites)), key=lambda i: metabolites[i])
     print("metabolites", metabolites, file=stderr)
-    # print("metabolites_index", metabolites_index, file=stderr)
+    print("metabolites_index", metabolites_index, file=stderr)
     adducts = list(map(Decimal, stdin.readline().split()))
-    # adducts_index = sorted(range(len(adducts)), key=lambda i: adducts[i])
+    adducts_index = sorted(range(len(adducts)), key=lambda i: adducts[i])
     print("adducts", adducts, file=stderr)
-    # print("adducts_index", adducts_index, file=stderr)
-    try:
-        products = dict()
-        for (i, m_i) in enumerate(metabolites, start=1):
-            print(i, "/", m, "products", len(products), file=stderr)
-            for (j, a_j) in enumerate(adducts, start=1):
-                s = m_i + a_j
-                if s > 0:
-                    products[s] = (i, j)
-        del(metabolites)
-        del(adducts)
-        products = sorted(products.items())
-    except MemoryError:
-        print("MemoryError", file=stderr)
-        products = [(Decimal(0), (1, 1))]
-    print("products", len(products), file=stderr)
-    for signal in map(Decimal, stdin.readline().split()):
-        print("signal", signal, file=stderr)
-        _, ans = products[nearest(products, signal)]
-        print(ans[0], ans[1])
+    print("adducts_index", adducts_index, file=stderr)
+    for i_signal, signal in enumerate(map(Decimal, stdin.readline().split())):
+        print(i_signal, "/", n, "signal", signal, file=stderr)
+        _, ans = nearest2(metabolites, metabolites_index, adducts, adducts_index, signal)
+        print(ans[0] + 1, ans[1] + 1)
