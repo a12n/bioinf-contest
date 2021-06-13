@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
-# from decimal import Decimal
+from decimal import Decimal
 from sys import stdin, stderr
-Decimal = float
 
 def nearest(ps, q, region=None):
     if region == None:
