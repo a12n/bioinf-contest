@@ -3,6 +3,28 @@
 from decimal import Decimal
 from sys import stdin, stderr
 
+def nearest(ps, q, region=None):
+    if region == None:
+        region = (0, len(ps))
+    if not (region[0] < region[1]):
+        return None
+    cur = region[0] + (region[1] - region[0]) // 2
+    # print("region", region, "cur", cur, file=stderr)
+    best = cur
+    if q < ps[cur][0]:
+        best_left = nearest(ps, q, region=(region[0], cur))
+        best_right = cur + 1 if cur < (region[1] - 1) else None
+    else:
+        best_left = cur - 1 if cur > region[0] else None
+        best_right = nearest(ps, q, region=(cur + 1, region[1]))
+    cands = []
+    cands.append( (abs(ps[cur][0] - q), cur) )
+    if best_left != None:
+        cands.append( (abs(ps[best_left][0] - q), best_left) )
+    if best_right != None:
+        cands.append( (abs(ps[best_right][0] - q), best_right) )
+    return min(cands)[1]
+
 for _ in range(int(stdin.readline())):
     m, k, n = map(int, stdin.readline().split())
     # print("m", m, "k", k, "n", n, file=stderr)
@@ -19,13 +41,5 @@ for _ in range(int(stdin.readline())):
     del(metabolites)
     del(adducts)
     for s in map(Decimal, stdin.readline().split()):
-        best = None
-        # print("s", s, file=stderr)
-        for (p, i, j) in products:
-            delta = abs(s - p)
-            if best == None or delta < best[0]:
-                best = (delta, i, j)
-            if best[0] == 0:
-                break
-        print("best", best, file=stderr)
-        print(best[1], best[2])
+        best = nearest(products, s)
+        print(products[best][1], products[best][2])
