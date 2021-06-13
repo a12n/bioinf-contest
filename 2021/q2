@@ -44,15 +44,15 @@ def nearest2(metabolites, metabolites_index,
 test_num = int(stdin.readline())
 for test_i in range(test_num):
     m, k, n = map(int, stdin.readline().split())
-    # print("m", m, "k", k, "n", n, file=stderr)
+    print("m", m, "k", k, "n", n, file=stderr)
     metabolites = list(map(Decimal, stdin.readline().split()))
     metabolites_index = sorted(range(len(metabolites)), key=lambda i: metabolites[i])
-    # print("metabolites", metabolites, file=stderr)
-    # print("metabolites_index", metabolites_index, file=stderr)
+    print("metabolites", metabolites, file=stderr)
+    print("metabolites_index", metabolites_index, file=stderr)
     adducts = list(map(Decimal, stdin.readline().split()))
     adducts_index = sorted(range(len(adducts)), key=lambda i: adducts[i])
-    # print("adducts", adducts, file=stderr)
-    # print("adducts_index", adducts_index, file=stderr)
+    print("adducts", adducts, file=stderr)
+    print("adducts_index", adducts_index, file=stderr)
     products = []
     for (i, m_i) in enumerate(metabolites, start=1):
         print("test(", test_i + 1, "/", test_num, ")", "build", "metabolite(", i, "/", m, ")", file=stderr)
