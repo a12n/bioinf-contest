@@ -53,16 +53,18 @@ for test_i in range(test_num):
     adducts_index = sorted(range(len(adducts)), key=lambda i: adducts[i])
     print("adducts", adducts, file=stderr)
     print("adducts_index", adducts_index, file=stderr)
-    products = []
+    products = dict()
     for (i, m_i) in enumerate(metabolites, start=1):
-        print("test(", test_i + 1, "/", test_num, ")", "build", "metabolite(", i, "/", m, ")", file=stderr)
+        print(i, "/", m, "products", len(products), file=stderr)
         for (j, a_j) in enumerate(adducts, start=1):
-            products.append((m_i + a_j, i, j))
-    products.sort()
-    # print("products", products, file=stderr)
+            s = m_i + a_j
+            if s > 0:
+                products[s] = (i, j)
     del(metabolites)
     del(adducts)
-    for (i, s_i) in enumerate(map(Decimal, stdin.readline().split()), start=1):
-        print("test(", test_i + 1, "/", test_num, ")", "query", "signal(", i, "/", n, ")", file=stderr)
-        best = nearest(products, s_i)
-        print(products[best][1], products[best][2])
+    products = sorted(products.items())
+    # print("products", products, file=stderr)
+    for signal in map(Decimal, stdin.readline().split()):
+        print("signal", signal, file=stderr)
+        _, ans = products[nearest(products, signal)]
+        print(ans[0], ans[1])
