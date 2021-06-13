@@ -3,6 +3,9 @@
 from decimal import Decimal
 from sys import stdin, stderr
 
+def delta(x, y):
+    return abs(x - y)
+
 def nearest(products, signal, region=None):
     if region == None:
         region = (0, len(products))
