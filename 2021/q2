@@ -41,6 +41,18 @@ def nearest2(metabolites, metabolites_index,
        adducts_range[0] >= adducts_range[1]:
         # Empty range
         return ans
+    # Brute force in small regions
+    metabolites_range_size = metabolites_range[1] - metabolites_range[0]
+    adducts_range_size = adducts_range[1] - adducts_range[0]
+    size_threshold = 100
+    if metabolites_range_size * adducts_range_size <= size_threshold:
+        for i in range(metabolites_range[0], metabolites_range[1]):
+            for j in range(adducts_range[0], adducts_range[1]):
+                product = metabolites[metabolites_index[i]] + adducts[adducts_index[j]]
+                delta = abs(product - signal)
+                if ans == None or delta < ans[0]:
+                    ans = (delta, (metabolites_index[i], adducts_index[j]))
+        return ans
     # TODO
     return ans
 
