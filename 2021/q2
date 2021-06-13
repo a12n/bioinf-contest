@@ -115,7 +115,15 @@ for test_i in range(test_num):
     adducts_index = sorted(range(len(adducts)), key=lambda i: adducts[i])
     print("adducts", adducts, file=stderr)
     print("adducts_index", adducts_index, file=stderr)
+    signal_cache = dict()
     for i_signal, signal in enumerate(map(Decimal, stdin.readline().split())):
         print(i_signal, "/", n, "signal", signal, file=stderr)
-        _, ans = nearest2(metabolites, metabolites_index, adducts, adducts_index, signal)
+        if signal in signal_cache:
+            ans = signal_cache[signal]
+        else:
+            _, ans = nearest2(metabolites, metabolites_index, adducts, adducts_index, signal)
+            if len(signal_cache) > 25000:
+                signal_cache.popitem()
+            signal_cache[signal] = ans
+            print("signal_cache", len(signal_cache), file=stderr)
         print(ans[0] + 1, ans[1] + 1)
