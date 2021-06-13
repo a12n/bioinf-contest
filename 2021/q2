@@ -3,26 +3,26 @@
 from decimal import Decimal
 from sys import stdin, stderr
 
-def nearest(ps, q, region=None):
+def nearest(products, signal, region=None):
     if region == None:
-        region = (0, len(ps))
+        region = (0, len(products))
     if not (region[0] < region[1]):
         return None
     cur = region[0] + (region[1] - region[0]) // 2
     # print("region", region, "cur", cur, file=stderr)
     best = cur
-    if q < ps[cur][0]:
-        best_left = nearest(ps, q, region=(region[0], cur))
+    if signal < products[cur][0]:
+        best_left = nearest(products, signal, region=(region[0], cur))
         best_right = cur + 1 if cur < (region[1] - 1) else None
     else:
         best_left = cur - 1 if cur > region[0] else None
-        best_right = nearest(ps, q, region=(cur + 1, region[1]))
+        best_right = nearest(products, signal, region=(cur + 1, region[1]))
     cands = []
-    cands.append( (abs(ps[cur][0] - q), cur) )
+    cands.append( (abs(products[cur][0] - signal), cur) )
     if best_left != None:
-        cands.append( (abs(ps[best_left][0] - q), best_left) )
+        cands.append( (abs(products[best_left][0] - signal), best_left) )
     if best_right != None:
-        cands.append( (abs(ps[best_right][0] - q), best_right) )
+        cands.append( (abs(products[best_right][0] - signal), best_right) )
     return min(cands)[1]
 
 def nearest2(metabolites, metabolites_index,
