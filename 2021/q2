@@ -25,7 +25,8 @@ def nearest(ps, q, region=None):
         cands.append( (abs(ps[best_right][0] - q), best_right) )
     return min(cands)[1]
 
-for _ in range(int(stdin.readline())):
+t = int(stdin.readline())
+for t_i in range(t):
     m, k, n = map(int, stdin.readline().split())
     # print("m", m, "k", k, "n", n, file=stderr)
     metabolites = list(map(Decimal, stdin.readline().split()))
@@ -34,12 +35,14 @@ for _ in range(int(stdin.readline())):
     # print("adducts", adducts, file=stderr)
     products = []
     for (i, m_i) in enumerate(metabolites, start=1):
+        print("test(", t_i + 1, "/", t, ")", "build", "metabolite(", i, "/", m, ")", file=stderr)
         for (j, a_j) in enumerate(adducts, start=1):
             products.append((m_i + a_j, i, j))
     products.sort()
     # print("products", products, file=stderr)
     del(metabolites)
     del(adducts)
-    for s in map(Decimal, stdin.readline().split()):
-        best = nearest(products, s)
+    for (i, s_i) in enumerate(map(Decimal, stdin.readline().split()), start=1):
+        print("test(", t_i + 1, "/", t, ")", "query", "signal(", i, "/", n, ")", file=stderr)
+        best = nearest(products, s_i)
         print(products[best][1], products[best][2])
