@@ -41,6 +41,19 @@ def nearest2(metabolites, metabolites_index,
        adducts_range[0] >= adducts_range[1]:
         # Empty range
         return ans
+    # Compute product - signal at region corners
+    corner_products = [
+        metabolites[metabolites_index[metabolites_range[0]]] + adducts[adducts_index[adducts_range[0]]],
+        metabolites[metabolites_index[metabolites_range[0]]] + adducts[adducts_index[adducts_range[1] - 1]],
+        metabolites[metabolites_index[metabolites_range[1] - 1]] + adducts[adducts_index[adducts_range[0]]],
+        metabolites[metabolites_index[metabolites_range[1] - 1]] + adducts[adducts_index[adducts_range[1] - 1]],
+    ]
+    corner_diffs = list(map(lambda product: product - signal, corner_products))
+    corner_negs = list(map(lambda diff: diff < 0, corner_diffs))
+    print("corner_diffs", corner_diffs, "corner_negs", corner_negs, file=stderr)
+    if len(set(corner_negs)) == 1:
+        print("no sign change in region", file=stderr)
+        return ans
     # Brute force in small regions
     metabolites_range_size = metabolites_range[1] - metabolites_range[0]
     adducts_range_size = adducts_range[1] - adducts_range[0]
