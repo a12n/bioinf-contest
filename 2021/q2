@@ -1,0 +1,31 @@
+#!/usr/bin/env python3
+
+from decimal import Decimal
+from sys import stdin, stderr
+
+for _ in range(int(stdin.readline())):
+    m, k, n = map(int, stdin.readline().split())
+    # print("m", m, "k", k, "n", n, file=stderr)
+    metabolites = list(map(Decimal, stdin.readline().split()))
+    # print("metabolites", metabolites, file=stderr)
+    adducts = list(map(Decimal, stdin.readline().split()))
+    # print("adducts", adducts, file=stderr)
+    products = []
+    for (i, m_i) in enumerate(metabolites, start=1):
+        for (j, a_j) in enumerate(adducts, start=1):
+            products.append((m_i + a_j, i, j))
+    products.sort()
+    # print("products", products, file=stderr)
+    del(metabolites)
+    del(adducts)
+    for s in map(Decimal, stdin.readline().split()):
+        best = None
+        # print("s", s, file=stderr)
+        for (p, i, j) in products:
+            delta = abs(s - p)
+            if best == None or delta < best[0]:
+                best = (delta, i, j)
+            if best[0] == 0:
+                break
+        print("best", best, file=stderr)
+        print(best[1], best[2])
