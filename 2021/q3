@@ -79,3 +79,18 @@ assert(len(patients) == nq)
 del(nq)
 
 print("patients", patients, file=stderr)
+
+########
+# Main #
+########
+
+def infocontent(patient, disease):
+    return sum(map(lambda q: max(map(lambda d: ic[lca2(q, d) - 1], disease)), patient))
+
+for patient in patients:
+    ans = None
+    for (i, disease) in enumerate(diseases, start=1):
+        ic_i = infocontent(patient, disease)
+        if ans == None or ic_i > ans[0]:
+            ans = (ic_i, i)
+    print(ans[1])
