@@ -17,8 +17,8 @@ assert(len(parent) == n)
 assert(len(ic) == n)
 del(n)
 
-print("parent", parent, file=stderr)
-print("ic", ic, file=stderr)
+# print("parent", parent, file=stderr)
+print("ic", len(ic), file=stderr)
 
 def rootpath(u):
     ans = []
@@ -55,7 +55,7 @@ for _ in range(m):
 assert(len(diseases) == m)
 del(m)
 
-print("diseases", diseases, file=stderr)
+print("diseases", len(diseases), file=stderr)
 
 #################
 # Read patients #
@@ -71,7 +71,7 @@ for _ in range(nq):
 assert(len(patients) == nq)
 del(nq)
 
-print("patients", patients, file=stderr)
+print("patients", len(patients), file=stderr)
 
 ########
 # Main #
