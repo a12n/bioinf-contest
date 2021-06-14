@@ -1,0 +1,84 @@
+#!/usr/bin/env python3
+
+from decimal import Decimal
+from sys import stdin, stderr
+
+#######################
+# Read phenotype tree #
+#######################
+
+ROOT = 1
+
+n = int(stdin.readline())
+parent = [None] + list(map(int, stdin.readline().split()))
+ic = list(map(int, stdin.readline().split()))
+
+assert(len(parent) == n)
+assert(len(ic) == n)
+del(n)
+
+print("parent", parent, file=stderr)
+print("ic", ic, file=stderr)
+
+def rootpath(u):
+    ans = []
+    while True:
+        ans.append(u)
+        if u == ROOT:
+            break
+        u = parent[u - 1]
+    return ans
+
+def lca(u, v):
+    ans = None
+    u_to_root = rootpath(u)
+    v_to_root = rootpath(v)
+    while True:
+        try:
+            if u_to_root[-1] == v_to_root[-1]:
+                ans = u_to_root.pop()
+                v_to_root.pop()
+            else:
+                break
+        except IndexError:
+            break
+    return ans
+
+lca2_cache = dict()
+def lca2(u, v):
+    k = (min(u, v), max(u, v))
+    if k not in lca2_cache:
+        lca2_cache[k] = lca(u, v)
+    return lca2_cache[k]
+
+#################
+# Read diseases #
+#################
+
+m = int(stdin.readline())
+diseases = []
+for _ in range(m):
+    cm_i = list(map(int, stdin.readline().split()))
+    assert(len(cm_i) - 1 == cm_i[0])
+    diseases.append(set(cm_i[1:]))
+
+assert(len(diseases) == m)
+del(m)
+
+print("diseases", diseases, file=stderr)
+
+#################
+# Read patients #
+#################
+
+nq = int(stdin.readline())
+patients = []
+for _ in range(nq):
+    cq_i = list(map(int, stdin.readline().split()))
+    assert(len(cq_i) - 1 == cq_i[0])
+    patients.append(set(cq_i[1:]))
+
+assert(len(patients) == nq)
+del(nq)
+
+print("patients", patients, file=stderr)
