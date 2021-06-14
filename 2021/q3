@@ -80,8 +80,9 @@ print("patients", patients, file=stderr)
 def infocontent(patient, disease):
     return sum(map(lambda q: max(map(lambda d: ic[lca(q, d) - 1], disease)), patient))
 
-for patient in patients:
+for (i, patient) in enumerate(patients, start=1):
     ans = None
+    print("patient", i, "/", len(patients), file=stderr)
     for (i, disease) in enumerate(diseases, start=1):
         ic_i = infocontent(patient, disease)
         if ans == None or ic_i > ans[0]:
