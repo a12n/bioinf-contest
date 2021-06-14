@@ -83,8 +83,8 @@ def infocontent(patient, disease):
 for (i, patient) in enumerate(patients, start=1):
     ans = None
     print("patient", i, "/", len(patients), file=stderr)
-    for (i, disease) in enumerate(diseases, start=1):
-        ic_i = infocontent(patient, disease)
-        if ans == None or ic_i > ans[0]:
-            ans = (ic_i, i)
+    for (j, disease) in enumerate(diseases, start=1):
+        ic_j = infocontent(patient, disease)
+        if ans == None or ic_j > ans[0]:
+            ans = (ic_j, j)
     print(ans[1])
