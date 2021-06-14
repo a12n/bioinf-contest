@@ -41,13 +41,6 @@ def lca(u, v):
             break
     return ans
 
-lca2_cache = dict()
-def lca2(u, v):
-    k = (min(u, v), max(u, v))
-    if k not in lca2_cache:
-        lca2_cache[k] = lca(u, v)
-    return lca2_cache[k]
-
 #################
 # Read diseases #
 #################
@@ -85,7 +78,7 @@ print("patients", patients, file=stderr)
 ########
 
 def infocontent(patient, disease):
-    return sum(map(lambda q: max(map(lambda d: ic[lca2(q, d) - 1], disease)), patient))
+    return sum(map(lambda q: max(map(lambda d: ic[lca(q, d) - 1], disease)), patient))
 
 for patient in patients:
     ans = None
