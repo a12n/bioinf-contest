@@ -31,16 +31,13 @@ def rootpath(u):
 
 def lca(u, v):
     ans = None
-    u_to_root = rootpath(u)
-    v_to_root = rootpath(v)
-    while True:
-        try:
-            if u_to_root[-1] == v_to_root[-1]:
-                ans = u_to_root.pop()
-                v_to_root.pop()
-            else:
-                break
-        except IndexError:
+    u_path = rootpath(u)
+    v_path = rootpath(v)
+    while u_path and v_path:
+        if u_path[-1] == v_path[-1]:
+            ans = u_path.pop()
+            v_path.pop()
+        else:
             break
     return ans
 
