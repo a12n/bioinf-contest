@@ -63,7 +63,7 @@ diseases = []
 for _ in range(m):
     cm_i = list(map(int, stdin.readline().split()))
     assert(len(cm_i) - 1 == cm_i[0])
-    diseases.append(set(cm_i[1:]))
+    diseases.append(list(cm_i[1:]))
 
 assert(len(diseases) == m)
 del(m)
@@ -79,7 +79,7 @@ patients = []
 for _ in range(nq):
     cq_i = list(map(int, stdin.readline().split()))
     assert(len(cq_i) - 1 == cq_i[0])
-    patients.append(set(cq_i[1:]))
+    patients.append(list(cq_i[1:]))
 
 assert(len(patients) == nq)
 del(nq)
