@@ -7,10 +7,10 @@ from sys import stdin, stdout, stderr
 # Read phenotype tree #
 #######################
 
-ROOT = 1
+ROOT = 0
 
 n = int(stdin.readline())
-parent = [None] + list(map(int, stdin.readline().split()))
+parent = [None] + list(map(lambda x: int(x) - 1, stdin.readline().split()))
 ic = list(map(int, stdin.readline().split()))
 
 assert(len(parent) == n)
@@ -23,11 +23,11 @@ print("ic", len(ic) if len(ic) > 100 else ic, file=stderr)
 def printdot(f=stdout):
     print("digraph {", file=f)
     for i in range(len(ic)):
-        # print("{:d} [label=\"{:d} = {:d}\"];".format(i + 1, i + 1, ic[i]), file=f)
-        print("{:d};".format(i + 1), file=f)
+        # print("{:d} [label=\"{:d} = {:d}\"];".format(i, i, ic[i]), file=f)
+        print("{:d};".format(i), file=f)
     for i in range(len(parent)):
         if parent[i] != None:
-            print("{:d} -> {:d};".format(parent[i], i + 1), file=f)
+            print("{:d} -> {:d};".format(parent[i], i), file=f)
     print("}", file=f)
 
 def rootpath(u):
@@ -36,7 +36,7 @@ def rootpath(u):
         ans.append(u)
         if u == ROOT:
             break
-        u = parent[u - 1]
+        u = parent[u]
     return ans
 
 def lca(u, v):
@@ -63,7 +63,7 @@ diseases = []
 for _ in range(m):
     cm_i = list(map(int, stdin.readline().split()))
     assert(len(cm_i) - 1 == cm_i[0])
-    diseases.append(list(cm_i[1:]))
+    diseases.append(list(map(lambda d: d - 1, cm_i[1:])))
 
 assert(len(diseases) == m)
 del(m)
@@ -72,7 +72,7 @@ print("diseases", len(diseases) if len(diseases) > 100 else diseases, file=stder
 
 print("reordering vertices in diseases", file=stderr)
 for disease in diseases:
-    disease.sort(key=lambda d: ic[d - 1], reverse=True)
+    disease.sort(key=lambda d: ic[d], reverse=True)
 
 #################
 # Read patients #
@@ -83,7 +83,7 @@ patients = []
 for _ in range(nq):
     cq_i = list(map(int, stdin.readline().split()))
     assert(len(cq_i) - 1 == cq_i[0])
-    patients.append(list(cq_i[1:]))
+    patients.append(list(map(lambda q: q - 1, cq_i[1:])))
 
 assert(len(patients) == nq)
 del(nq)
@@ -97,16 +97,16 @@ print("patients", len(patients) if len(patients) > 100 else patients, file=stder
 def infocontent(patient, disease):
     ans = 0
     for q in patient:
-        max_lca_ic = ic[lca(q, disease[0]) - 1]
+        max_lca_ic = ic[lca(q, disease[0])]
         for d in disease[1:]:
-            if ic[d - 1] < max_lca_ic:
+            if ic[d] < max_lca_ic:
                 # LCA(q, d) can't be higher in the tree than d itself,
                 # and IC(d) is already less than the already found
                 # vertex in disease. Ignore rest of vertices in this
                 # disease, since they are sorted in order of
                 # decreasing IC(d).
                 break
-            max_lca_ic = max(max_lca_ic, ic[lca(q, d) - 1])
+            max_lca_ic = max(max_lca_ic, ic[lca(q, d)])
         ans += max_lca_ic
     return ans
 
