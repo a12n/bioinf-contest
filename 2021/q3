@@ -70,6 +70,10 @@ del(m)
 
 print("diseases", len(diseases) if len(diseases) > 100 else diseases, file=stderr)
 
+print("reordering vertices in diseases", file=stderr)
+for disease in diseases:
+    disease.sort(key=lambda d: ic[d - 1], reverse=True)
+
 #################
 # Read patients #
 #################
@@ -92,6 +96,16 @@ print("patients", len(patients) if len(patients) > 100 else patients, file=stder
 
 def infocontent(patient, disease):
     return sum(map(lambda q: max(map(lambda d: ic[lca(q, d) - 1], disease)), patient))
+    # ans = 0
+    # for q in patient:
+    #     max_lca_ic = ic[lca(q, disease[0]) - 1]
+    #     for d in disease[1:]:
+    #         if ic[d - 1] < max_lca_ic:
+    #             # TODO
+    #             break
+    #         max_lca_ic = max(max_lca_ic, ic[lca(q, d) - 1])
+    #     ans += max_lca_ic
+    # return ans
 
 for (i, patient) in enumerate(patients, start=1):
     ans = None
