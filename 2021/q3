@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from decimal import Decimal
-from sys import stdin, stderr
+from sys import stdin, stdout, stderr
 
 #######################
 # Read phenotype tree #
@@ -19,6 +19,16 @@ del(n)
 
 print("parent", len(parent) if len(parent) > 100 else parent, file=stderr)
 print("ic", len(ic) if len(ic) > 100 else ic, file=stderr)
+
+def printdot(f=stdout):
+    print("digraph {", file=f)
+    for i in range(len(ic)):
+        # print("{:d} [label=\"{:d} = {:d}\"];".format(i + 1, i + 1, ic[i]), file=f)
+        print("{:d};".format(i + 1), file=f)
+    for i in range(len(parent)):
+        if parent[i] != None:
+            print("{:d} -> {:d};".format(parent[i], i + 1), file=f)
+    print("}", file=f)
 
 def rootpath(u):
     ans = []
@@ -40,6 +50,9 @@ def lca(u, v):
         else:
             break
     return ans
+
+# with open("/tmp/q3.dot", "w") as f:
+#     printdot(f)
 
 #################
 # Read diseases #
