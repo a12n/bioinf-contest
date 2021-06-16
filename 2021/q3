@@ -149,11 +149,25 @@ def infocontent(patient, disease):
         ans += max_lca_ic
     return ans
 
+def icupperbound(patient, disease):
+    # return len(patient) * ic[disease[0]]
+    # return len(patient) * min(ic[patient[0]], ic[disease[0]])
+    return sum(map(lambda q: min(ic[q], ic[disease[0]]), patient))
+
 for (i, patient) in enumerate(patients, start=1):
-    ans = None
     print("patient", i, "/", len(patients), file=stderr)
-    for (j, disease) in enumerate(diseases, start=1):
-        ic_j = infocontent(patient, disease)
-        if ans == None or ic_j > ans[0]:
-            ans = (ic_j, j)
+    print("enumerate and sort diseases", file=stderr)
+    solutions = list(map(lambda entry: (icupperbound(patient, entry[1]), entry[0], entry[1]), enumerate(diseases, start=1)))
+    solutions.sort(reverse=True)
+    ans = (infocontent(patient, solutions[0][2]), solutions[0][1])
+    print("initial ans", ans, file=stderr)
+    print("initial ub", solutions[0][0], file=stderr)
+    for (ub, j, disease) in solutions[1:]:
+        # print("disease", j, "/", len(diseases), file=stderr)
+        if ub < ans[0]:
+            print("ignoring", len(diseases) - j, "less likely diseases", file=stderr)
+            break
+        patient_disease_ic = infocontent(patient, disease)
+        if patient_disease_ic > ans[0]:
+            ans = (patient_disease_ic, j)
     print(ans[1])
