@@ -57,8 +57,7 @@ for j in range(1, log_n + 1):
 def printdot(f=stdout):
     print("digraph {", file=f)
     for i in range(len(ic)):
-        # print("{:d} [label=\"{:d} = {:d}\"];".format(i, i, ic[i]), file=f)
-        print("{:d};".format(i), file=f)
+        print("{:d} [label=\"{:d} @ {:d}\"];".format(i, i, depth[i]), file=f)
     for i in range(len(parent)):
         if parent[i] != None:
             print("{:d} -> {:d};".format(parent[i], i), file=f)
