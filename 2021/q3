@@ -2,6 +2,7 @@
 
 from decimal import Decimal
 from sys import stdin, stdout, stderr
+import math
 
 #######################
 # Read phenotype tree #
@@ -10,15 +11,41 @@ from sys import stdin, stdout, stderr
 ROOT = 0
 
 n = int(stdin.readline())
-parent = [None] + list(map(lambda x: int(x) - 1, stdin.readline().split()))
+log_n = int(math.log2(n))
+print("n", n, "log_n", log_n, file=stderr)
+parent = [None] + list(map(lambda p: int(p) - 1, stdin.readline().split()))
 ic = list(map(int, stdin.readline().split()))
 
 assert(len(parent) == n)
 assert(len(ic) == n)
-del(n)
 
 print("parent", len(parent) if len(parent) > 100 else parent, file=stderr)
 print("ic", len(ic) if len(ic) > 100 else ic, file=stderr)
+
+depth = [0] + [None] * (n - 1)
+for i in range(1, n):
+    print("pp", "depth", i + 1, "/", n, file=stderr)
+    if depth[parent[i]] != None:
+        depth[i] = depth[parent[i]] + 1
+    else:
+        while parent[i] != None:
+            i = parent[i]
+            depth[i] += 1
+print("depth", len(depth) if len(depth) > 100 else depth, file=stderr)
+
+binascent = []
+for i in range(n):
+    binascent.append([])
+    for j in range(log_n + 1):
+        binascent[-1].append(ROOT)
+
+for i in range(n):
+    binascent[i][0] = parent[i] if parent[i] != None else ROOT
+
+for j in range(1, log_n + 1):
+    for i in range(n):
+        binascent[i][j] = binascent[binascent[i][j - 1]][j - 1]
+# print("binascent", binascent, file=stderr)
 
 def printdot(f=stdout):
     print("digraph {", file=f)
@@ -40,16 +67,18 @@ def rootpath(u):
     return ans
 
 def lca(u, v):
-    ans = None
-    u_path = rootpath(u)
-    v_path = rootpath(v)
-    while u_path and v_path:
-        if u_path[-1] == v_path[-1]:
-            ans = u_path.pop()
-            v_path.pop()
-        else:
-            break
-    return ans
+    if depth[v] > depth[u]:
+        u, v = v, u
+    for j in range(log_n, -1, -1):
+        if depth[binascent[u][j]] - depth[v] >= 0:
+            u = binascent[u][j]
+    if u == v:
+        return u
+    for j in range(log_n, -1, -1):
+        if binascent[u][j] != binascent[v][j]:
+            u = binascent[u][j]
+            v = binascent[v][j]
+    return parent[u]
 
 # with open("/tmp/q3.dot", "w") as f:
 #     printdot(f)
