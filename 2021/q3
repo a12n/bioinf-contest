@@ -134,21 +134,21 @@ for patient in patients:
 # Main #
 ########
 
-def infocontent(patient, disease):
-    ans = 0
-    for q in patient:
-        max_lca_ic = ic[lca(q, disease[0])]
-        for d in disease[1:]:
-            if ic[d] < max_lca_ic:
-                # LCA(q, d) can't be higher in the tree than d itself,
-                # and IC(d) is already less than the already found
-                # vertex in disease. Ignore rest of vertices in this
-                # disease, since they are sorted in order of
-                # decreasing IC(d).
-                break
-            max_lca_ic = max(max_lca_ic, ic[lca(q, d)])
-        ans += max_lca_ic
+def infocontent1(q, disease):
+    ans = ic[lca(q, disease[0])]
+    for d in disease[1:]:
+        if ic[d] < ans:
+            # LCA(q, d) can't be higher in the tree than d itself,
+            # and IC(d) is already less than the already found
+            # vertex in disease. Ignore rest of vertices in this
+            # disease, since they are sorted in order of
+            # decreasing IC(d).
+            break
+        ans = max(ans, ic[lca(q, d)])
     return ans
+
+def infocontent(patient, disease):
+    return sum(map(lambda q: infocontent1(q, disease), patient))
 
 def icupperbound(patient, disease):
     # return len(patient) * ic[disease[0]]
