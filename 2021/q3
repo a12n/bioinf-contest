@@ -33,6 +33,13 @@ for i in range(1, n):
             depth[i] += 1
 print("depth", len(depth) if len(depth) > 100 else depth, file=stderr)
 
+depth_max_ic = []
+for i in range(n):
+    if len(depth_max_ic) <= depth[i]:
+        depth_max_ic.extend([0] * (depth[i] + 1 - len(depth_max_ic)))
+    depth_max_ic[depth[i]] = max(depth_max_ic[depth[i]], ic[i])
+print("depth_max_ic", depth_max_ic, file=stderr)
+
 binascent = []
 for i in range(n):
     binascent.append([])
