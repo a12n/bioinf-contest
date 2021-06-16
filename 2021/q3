@@ -126,6 +126,10 @@ del(nq)
 
 print("patients", len(patients) if len(patients) > 100 else patients, file=stderr)
 
+print("reordering vertices in patients", file=stderr)
+for patient in patients:
+    patient.sort(key=lambda q: ic[q], reverse=True)
+
 ########
 # Main #
 ########
