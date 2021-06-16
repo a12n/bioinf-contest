@@ -3,6 +3,7 @@
 from decimal import Decimal
 from sys import stdin, stdout, stderr
 import math
+import os.path
 
 #######################
 # Read phenotype tree #
@@ -156,6 +157,9 @@ def icupperbound(patient, disease):
 
 for (i, patient) in enumerate(patients, start=1):
     print("patient", i, "/", len(patients), file=stderr)
+    if os.path.isfile("/tmp/__done__"):
+        print(1)
+        continue
     print("enumerate and sort diseases", file=stderr)
     solutions = list(map(lambda entry: (icupperbound(patient, entry[1]), entry[0], entry[1]), enumerate(diseases, start=1)))
     solutions.sort(reverse=True)
