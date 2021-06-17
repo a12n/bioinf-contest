@@ -12,8 +12,7 @@ import os.path
 ROOT = 0
 
 n = int(stdin.readline())
-log_n = int(math.log2(n))
-print("n", n, "log_n", log_n, file=stderr)
+print("n", n, file=stderr)
 parent = [None] + list(map(lambda p: int(p) - 1, stdin.readline().split()))
 ic = list(map(int, stdin.readline().split()))
 
@@ -22,73 +21,6 @@ assert(len(ic) == n)
 
 print("parent", len(parent) if len(parent) > 100 else parent, file=stderr)
 print("ic", len(ic) if len(ic) > 100 else ic, file=stderr)
-
-depth = [0] + [None] * (n - 1)
-for i in range(1, n):
-    print("pp", "depth", i + 1, "/", n, file=stderr)
-    if depth[parent[i]] != None:
-        depth[i] = depth[parent[i]] + 1
-    else:
-        while parent[i] != None:
-            i = parent[i]
-            depth[i] += 1
-print("depth", len(depth) if len(depth) > 100 else depth, file=stderr)
-
-depth_max_ic = []
-for i in range(n):
-    if len(depth_max_ic) <= depth[i]:
-        depth_max_ic.extend([0] * (depth[i] + 1 - len(depth_max_ic)))
-    depth_max_ic[depth[i]] = max(depth_max_ic[depth[i]], ic[i])
-print("depth_max_ic", depth_max_ic, file=stderr)
-
-binascent = []
-for i in range(n):
-    binascent.append([])
-    for j in range(log_n + 1):
-        binascent[-1].append(ROOT)
-
-for i in range(n):
-    binascent[i][0] = parent[i] if parent[i] != None else ROOT
-
-for j in range(1, log_n + 1):
-    for i in range(n):
-        binascent[i][j] = binascent[binascent[i][j - 1]][j - 1]
-# print("binascent", binascent, file=stderr)
-
-def printdot(f=stdout):
-    print("digraph {", file=f)
-    for i in range(len(ic)):
-        print("{:d} [label=\"{:d} @ {:d}\"];".format(i, i, depth[i]), file=f)
-    for i in range(len(parent)):
-        if parent[i] != None:
-            print("{:d} -> {:d};".format(parent[i], i), file=f)
-    print("}", file=f)
-
-def rootpath(u):
-    ans = []
-    while True:
-        ans.append(u)
-        if u == ROOT:
-            break
-        u = parent[u]
-    return ans
-
-def lca(u, v):
-    if depth[v] > depth[u]:
-        u, v = v, u
-    for j in range(log_n, -1, -1):
-        if depth[binascent[u][j]] - depth[v] >= 0:
-            u = binascent[u][j]
-    if u == v:
-        return u
-    for j in range(log_n, -1, -1):
-        if binascent[u][j] != binascent[v][j]:
-            u = binascent[u][j]
-            v = binascent[v][j]
-    return parent[u]
-
-# with open("/tmp/q3.dot", "w") as f:
-#     printdot(f)
 
 #################
 # Read diseases #
@@ -99,16 +31,23 @@ diseases = []
 for _ in range(m):
     cm_i = list(map(int, stdin.readline().split()))
     assert(len(cm_i) - 1 == cm_i[0])
-    diseases.append(list(map(lambda d: d - 1, cm_i[1:])))
+    diseases.append(set(map(lambda d: d - 1, cm_i[1:])))
 
 assert(len(diseases) == m)
-del(m)
 
 print("diseases", len(diseases) if len(diseases) > 100 else diseases, file=stderr)
 
-print("reordering vertices in diseases", file=stderr)
-for disease in diseases:
-    disease.sort(key=lambda d: ic[d], reverse=True)
+print("pp", "disease presence", "begin", file=stderr)
+presence = dict()
+for (j, disease) in enumerate(diseases):
+    print("pp", "disease presence", j + 1, "/", len(diseases), file=stderr)
+    for d in disease:
+        while d != None:
+            presence.setdefault(d, set()).add(j)
+            # TODO: set of ranges (d1, d2) instead of individual vertices?
+            d = parent[d]
+print("pp", "disease presence", "end", file=stderr)
+print("presence", presence, file=stderr)
 
 #################
 # Read patients #
@@ -119,59 +58,32 @@ patients = []
 for _ in range(nq):
     cq_i = list(map(int, stdin.readline().split()))
     assert(len(cq_i) - 1 == cq_i[0])
-    patients.append(list(map(lambda q: q - 1, cq_i[1:])))
+    patients.append(set(map(lambda q: q - 1, cq_i[1:])))
 
 assert(len(patients) == nq)
 del(nq)
 
 print("patients", len(patients) if len(patients) > 100 else patients, file=stderr)
 
-print("reordering vertices in patients", file=stderr)
-for patient in patients:
-    patient.sort(key=lambda q: ic[q], reverse=True)
-
 ########
 # Main #
 ########
 
-def infocontent1(q, disease):
-    ans = ic[lca(q, disease[0])]
-    for d in disease[1:]:
-        if ic[d] < ans:
-            # LCA(q, d) can't be higher in the tree than d itself,
-            # and IC(d) is already less than the already found
-            # vertex in disease. Ignore rest of vertices in this
-            # disease, since they are sorted in order of
-            # decreasing IC(d).
-            break
-        ans = max(ans, ic[lca(q, d)])
-    return ans
-
-def infocontent(patient, disease):
-    return sum(map(lambda q: infocontent1(q, disease), patient))
-
-def icupperbound(patient, disease):
-    # return len(patient) * ic[disease[0]]
-    # return len(patient) * min(ic[patient[0]], ic[disease[0]])
-    return sum(map(lambda q: min(ic[q], ic[disease[0]]), patient))
-
-for (i, patient) in enumerate(patients, start=1):
-    print("patient", i, "/", len(patients), file=stderr)
+for (i, patient) in enumerate(patients):
+    print("patient", i + 1, "/", len(patients), file=stderr)
     if os.path.isfile("/tmp/__done__"):
         print(1)
         continue
-    print("enumerate and sort diseases", file=stderr)
-    solutions = list(map(lambda entry: (icupperbound(patient, entry[1]), entry[0], entry[1]), enumerate(diseases, start=1)))
-    solutions.sort(reverse=True)
-    ans = (infocontent(patient, solutions[0][2]), solutions[0][1])
-    print("initial ans", ans, file=stderr)
-    print("initial ub", solutions[0][0], file=stderr)
-    for (ub, j, disease) in solutions[1:]:
-        # print("disease", j, "/", len(diseases), file=stderr)
-        if ub < ans[0]:
-            print("ignoring", len(diseases) - j, "less likely diseases", file=stderr)
-            break
-        patient_disease_ic = infocontent(patient, disease)
-        if patient_disease_ic > ans[0]:
-            ans = (patient_disease_ic, j)
-    print(ans[1])
+    candidates = dict()
+    for q in patient:
+        seen = set()
+        while q != None:
+            for j in presence.get(q, set()):
+                if j not in seen:
+                    candidates[j] = candidates.get(j, 0) + ic[q]
+                    seen.add(j)
+            q = parent[q]
+    # print("candidates", candidates, file=stderr)
+    best = max(candidates.items(), key=lambda e: e[1])
+    # print("best", best, file=stderr)
+    print(best[0] + 1)
