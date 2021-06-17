@@ -45,6 +45,9 @@ for (j, disease) in enumerate(diseases):
         while d != None:
             presence.setdefault(d, set()).add(j)
             # TODO: set of ranges (d1, d2) instead of individual vertices?
+            # TODO: universal set at the root, each child keeps set of
+            # vertices to remove from it's parent set to get set of
+            # diseases at the vertex?
             d = parent[d]
 print("pp", "disease presence", "end", file=stderr)
 print("presence", presence, file=stderr)
@@ -77,11 +80,13 @@ for (i, patient) in enumerate(patients):
     candidates = dict()
     for q in patient:
         seen = set()
-        while q != None:
+        done = False
+        while q != None and not done:
             for j in presence.get(q, set()):
                 if j not in seen:
                     candidates[j] = candidates.get(j, 0) + ic[q]
                     seen.add(j)
+                done = True
             q = parent[q]
     # print("candidates", candidates, file=stderr)
     best = max(candidates.items(), key=lambda e: e[1])
