@@ -37,6 +37,16 @@ assert(len(diseases) == m)
 
 print("diseases", len(diseases) if len(diseases) > 100 else diseases, file=stderr)
 
+def unionranges(ranges):
+    if len(ranges) == 0:
+        return
+    ranges.sort()
+    for i in range(1, len(ranges)):
+        if ranges[i][0] <= (ranges[i - 1][1] + 1):
+            ranges[i] = (ranges[i - 1][0], max(ranges[i - 1][1], ranges[i][1]))
+            ranges[i - 1] = None
+    ranges[:] = list(filter(lambda r: r != None, ranges))
+
 print("pp", "disease presence", "begin", file=stderr)
 presence = dict()
 for (j, disease) in enumerate(diseases):
@@ -51,6 +61,12 @@ for (j, disease) in enumerate(diseases):
             d = parent[d]
 print("pp", "disease presence", "end", file=stderr)
 print("presence", presence, file=stderr)
+
+def querypresence(u):
+    return presence.get(u, set())
+    # for r in presence.get(u, []):
+    #     for v in range(r[0], r[1] + 1):
+    #         yield v
 
 #################
 # Read patients #
@@ -82,7 +98,7 @@ for (i, patient) in enumerate(patients):
         seen = set()
         done = False
         while q != None and not done:
-            for j in presence.get(q, set()):
+            for j in querypresence(q):
                 if j not in seen:
                     candidates[j] = candidates.get(j, 0) + ic[q]
                     seen.add(j)
