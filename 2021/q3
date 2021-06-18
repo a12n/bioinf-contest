@@ -71,6 +71,7 @@ def querypresence(u):
 for (j, disease) in enumerate(diseases):
     print("pp", "disease presence", j + 1, "/", len(diseases), file=stderr)
     for d in disease:
+        # presence.setdefault(d, set()).add(j)
         while d != None:
             # presence.setdefault(d, set()).add(j)
             addpresence(d, j)
@@ -131,6 +132,8 @@ for (i, patient) in enumerate(patients):
         continue
     candidates = dict()
     for q in patient:
+        # for item in search(q).items():
+        #     candidates[item[0]] = candidates.get(item[0], 0) + item[1]
         seen = set()
         done = False
         while q != None and not done:
