@@ -59,18 +59,22 @@ def addpresence(u, j):
     ranges[:] = list(filter(lambda r: r != None, ranges))
 
 def querypresence(u):
-    # return presence.get(u, set())
-    for r in presence.get(u, []):
-        for v in range(r[0], r[1] + 1):
-            yield v
+    return presence.get(u, set())
+    # for r in presence.get(u, []):
+    #     for v in range(r[0], r[1] + 1):
+    #         yield v
 
 for (j, disease) in enumerate(diseases):
     print("pp", "disease presence", j + 1, "/", len(diseases), file=stderr)
     for d in disease:
         # presence.setdefault(d, set()).add(j)
         while d != None:
-            # presence.setdefault(d, set()).add(j)
-            addpresence(d, j)
+            presence.setdefault(d, set())
+            # For test5:
+            # if len(presence[d]) > 20:
+            #     break
+            presence[d].add(j)
+            # addpresence(d, j)
             # TODO: set of ranges (d1, d2) instead of individual vertices?
             # TODO: universal set at the root, each child keeps set of
             # vertices to remove from it's parent set to get set of
