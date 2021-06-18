@@ -102,6 +102,28 @@ print("patients", len(patients) if len(patients) > 100 else patients, file=stder
 # Main #
 ########
 
+def search(u):
+    ans = dict()
+    seen = set()
+    # print("search", "u", u, file=stderr)
+    while u != None and len(ans) == 0:
+        # print("u", u, file=stderr)
+        queue = deque()
+        queue.append(u)
+        while queue:
+            v = queue.pop()
+            # print("queue", queue, "v", v, file=stderr)
+            if v in seen:
+                # print("v", v, "in seen", file=stderr)
+                continue
+            seen.add(v)
+            for j in querypresence(v):
+                # print("ans", "add", j, file=stderr)
+                ans[j] = max(ans.get(j, 0), ic[u])
+            queue.extend(children[v])
+        u = parent[u]
+    return ans
+
 for (i, patient) in enumerate(patients):
     print("patient", i + 1, "/", len(patients), file=stderr)
     if os.path.isfile("/tmp/__done__"):
